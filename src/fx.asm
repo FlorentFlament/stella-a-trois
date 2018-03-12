@@ -18,45 +18,10 @@ fx_kernel SUBROUTINE
 	jsr fx_main
 	rts
 
-fx_main SUBROUTINE
-          lda #$00 ; one copy small p0 (Number & Size)
-          sta NUSIZ0
-          lda #$9e
-          sta COLUP0
-
-	ldx #63 ; points
-.next_line:
-	; Draw a plot
-	sta WSYNC
-	sta HMOVE
-	lda #$01
-	sta GRP0
-
-	; Compute next dot position
-	txa
-	tay
-	lda (cylnorm_ptr),Y
-	; Fetch corresponding disc
-	tay
-	lda fx_disc_l,Y
-	sta disc_ptr
-	lda fx_disc_h,Y
-	sta disc_ptr+1
-	; Fetch cos value from the disc
-	lda frame_cnt
-	lsr
-	and #$1f
-	tay
-	lda (disc_ptr),Y
-	tay
-
-	; Ensure the plot has been drawned
-	sta WSYNC
-	; turn off P0
-	lda #$00
-	sta GRP0
+; Position of the dot must be in Y register
+	MAC fx_position_dot
 	; Position next plot
-	sleep 20
+	sleep 25
 	sec
 	tya
 .rough_loop:
@@ -72,6 +37,62 @@ fx_main SUBROUTINE
           asl
           REPEND
           sta HMP0 ; Fine position of missile or sprite
+	ENDM
+
+; The dot number to compute is in X
+; Returns the position of the dot in A
+	MAC fx_compute_next_dot
+	txa
+	tay ; both Y and X are used later
+	lda (cylnorm_ptr),Y
+	; Fetch corresponding disc
+	tay
+	lda fx_disc_l,Y
+	sta disc_ptr
+	lda fx_disc_h,Y
+	sta disc_ptr+1
+
+	; Fetch angle and add rotation
+	clc
+	txa
+	and #$07
+	tay
+	lda fx_cylangle,Y
+	asl
+	adc frame_cnt
+	lsr
+	and #$1f
+
+	; Load dot position from disc
+	tay
+	lda (disc_ptr),Y
+	ENDM
+
+
+fx_main SUBROUTINE
+          lda #$00 ; one copy small p0 (Number & Size)
+          sta NUSIZ0
+          lda #$9e
+          sta COLUP0
+
+	ldx #63 ; points
+.next_line:
+	; Compute next dot position
+	fx_compute_next_dot
+	tay
+	; Ensure the plot has been drawned
+	sta WSYNC
+
+	; turn off P0
+	lda #$00
+	sta GRP0
+	fx_position_dot
+
+	; Prepare to display next dot
+	sta WSYNC
+	sta HMOVE
+	lda #$01
+	sta GRP0
 
 	dex
 	bpl .next_line
@@ -90,3 +111,6 @@ fx_overscan SUBROUTINE
 ; Data
 	INCLUDE "generated/fx_data.asm"
 	INCLUDE "generated/fx_tables.asm"
+
+fx_cylangle:
+	dc.b $00, $08, $10, $18, $04, $0c, $14, $1c
