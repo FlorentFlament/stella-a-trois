@@ -5,12 +5,20 @@ fx_vblank SUBROUTINE
 	rts
 
 fx_kernel SUBROUTINE
+	ldy #49
+.next_line:
+	sta WSYNC
+	dey
+	bpl .next_line
+
+	jsr fx_main
+	rts
+
+fx_main SUBROUTINE
           lda #$00 ; one copy small p0 (Number & Size)
           sta NUSIZ0
           lda #$9e
           sta COLUP0
-          lda #$01
-          sta GRP0
 
 	ldy #63 ; points
 .next_line:
