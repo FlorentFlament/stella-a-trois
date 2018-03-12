@@ -1,76 +1,60 @@
-fx_init:
-	lda #1
-	sta seed
+fx_init SUBROUTINE
 	rts
 
-fx_vblank:
-	lda seed
-	sta buffer
-	jsr fill_buffer
+fx_vblank SUBROUTINE
 	rts
 
-fx_kernel:
-	ldy #31 ; stripes
+fx_kernel SUBROUTINE
+          lda #$00 ; one copy small p0 (Number & Size)
+          sta NUSIZ0
+          lda #$9e
+          sta COLUP0
+          lda #$01
+          sta GRP0
+
+	ldy #63 ; points
 .next_line:
-	lda buffer
 	sta WSYNC
-	sta COLUBK
-	lda buffer+1
-	sta COLUPF
-	lda buffer+2
-	sta PF0
-	lda buffer+3
-	sta PF1
-	lda buffer+4
-	sta PF2
-	jsr fill_buffer
-	REPEAT 3
+	lda #$00
+	sta GRP0 ; turn off P0
+
+	; Compute next dot position
+	lda karmeliet,Y
+	sleep 30
+	sec
+.rough_loop:
+          ; The pos_star loop consumes 15 (5*3) pixels
+          sbc #$0f        ; 2 cycles
+          bcs .rough_loop ; 3 cycles
+	sta RESP0
+
+          ; A register has value is in [-15 .. -1]
+          adc #$07 ; A in [-8 .. 6]
+          eor #$ff ; A in [-7 .. 7]
+          REPEAT 4
+          asl
+          REPEND
+          sta HMP0 ; Fine position of missile or sprite
+
+	; Now draw the plot
 	sta WSYNC
-	REPEND
+	sta HMOVE
+	lda #$01
+	sta GRP0
+
 	dey
-	bne .next_line
+	bpl .next_line
 
 	lda #0
 	sta WSYNC
 	sta COLUBK
 	sta COLUPF
+          sta COLUP0
+	sta GRP0
 	rts
 
-fx_overscan:
-	inc framecnt		; Increment frame counter
-	lda framecnt
-	and #$0f
-	bne .endos
-	inc seed
-.endos
+fx_overscan SUBROUTINE
 	rts
 
-
-; A must contain the previous value of the xor_shift
-; A contains the new xor_shift value on return
-; Note: tmp is overwritten
-xor_shift:
-	sta tmp
-	asl
-	eor tmp
-	sta tmp
-	lsr
-	eor tmp
-	sta tmp
-	asl
-	asl
-	eor tmp
-	rts
-
-; Uses first element of buffer as last xor_shift value
-; Fills the buffer with new pseudo-random values
-; Note: Uses X register
-fill_buffer:
-	ldx #5
-	lda buffer
-.next:
-	jsr xor_shift
-	sta buffer,X
-	dex
-	bpl .next
-	rts
+; Data
+	INCLUDE "generated/fx_data.asm"

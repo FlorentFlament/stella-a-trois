@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 from sys import argv
 from PIL import Image
 
@@ -28,6 +27,7 @@ def im2fx(im):
                 res[y] = x;
                 break
 
+    res.reverse()
     return res
 
 def lst2asm(lst):
