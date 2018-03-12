@@ -11,10 +11,7 @@
 
 	SEG.U ram
 	ORG $0080
-framecnt	DS.B	1
-seed	DS.B	1
-tmp	DS.B	1
-buffer	DS.B	5
+	include "zik/spookjaune_variables.asm"
 
 
 ;;;-----------------------------------------------------------------------------
@@ -24,6 +21,7 @@ buffer	DS.B	5
 	ORG $F000
 init	CLEAN_START		; Initializes Registers & Memory
 	jsr fx_init
+	include "zik/spookjaune_init.asm"
 
 main_loop:
 	VERTICAL_SYNC		; 4 scanlines Vertical Sync signal
@@ -31,6 +29,8 @@ main_loop:
 	; 34 VBlank lines (76 cycles/line)
 	lda #39			; (/ (* 34.0 76) 64) = 40.375
 	sta TIM64T
+
+	include "zik/spookjaune_player.asm"
 	jsr fx_vblank
 	jsr wait_timint
 
@@ -59,6 +59,10 @@ wait_timint:
 	INCLUDE "src/fx.asm"
 
 
+; Data
+	include "zik/spookjaune_trackdata.asm"
+
+	echo "ROM left: ", ($fffc - *)
 ;;;-----------------------------------------------------------------------------
 ;;; Reset Vector
 
