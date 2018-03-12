@@ -1,4 +1,8 @@
 fx_init SUBROUTINE
+	lda #<karmeliet
+	sta cylnorm_ptr
+	lda #>karmeliet
+	sta cylnorm_ptr+1
 	rts
 
 fx_vblank SUBROUTINE
@@ -20,16 +24,41 @@ fx_main SUBROUTINE
           lda #$9e
           sta COLUP0
 
-	ldy #63 ; points
+	ldx #63 ; points
 .next_line:
+	; Draw a plot
 	sta WSYNC
-	lda #$00
-	sta GRP0 ; turn off P0
+	sta HMOVE
+	lda #$01
+	sta GRP0
 
 	; Compute next dot position
-	lda karmeliet,Y
-	sleep 30
+	txa
+	tay
+	lda (cylnorm_ptr),Y
+	; Fetch corresponding disc
+	tay
+	lda fx_disc_l,Y
+	sta disc_ptr
+	lda fx_disc_h,Y
+	sta disc_ptr+1
+	; Fetch cos value from the disc
+	lda frame_cnt
+	lsr
+	and #$1f
+	tay
+	lda (disc_ptr),Y
+	tay
+
+	; Ensure the plot has been drawned
+	sta WSYNC
+	; turn off P0
+	lda #$00
+	sta GRP0
+	; Position next plot
+	sleep 20
 	sec
+	tya
 .rough_loop:
           ; The pos_star loop consumes 15 (5*3) pixels
           sbc #$0f        ; 2 cycles
@@ -44,13 +73,7 @@ fx_main SUBROUTINE
           REPEND
           sta HMP0 ; Fine position of missile or sprite
 
-	; Now draw the plot
-	sta WSYNC
-	sta HMOVE
-	lda #$01
-	sta GRP0
-
-	dey
+	dex
 	bpl .next_line
 
 	lda #0
@@ -66,3 +89,4 @@ fx_overscan SUBROUTINE
 
 ; Data
 	INCLUDE "generated/fx_data.asm"
+	INCLUDE "generated/fx_tables.asm"

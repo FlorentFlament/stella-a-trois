@@ -58,3 +58,29 @@ Sizes
 
 * Graphix = (* (- (- 228 128) 16) 8) 672 Bytes
 
+
+Cylindrical shapes
+==================
+
+Data
+----
+
+* The outline of our cylindrical objects
+* One dot per line
+* The dot's value is the distance of the outline from the center of the cylinder
+
+Engine
+------
+
+* 16 discs corresponding to 16 possible distances from the center
+* 1 (half) cos table per disc diameter
+* 32 values per cos table
+
+Algorithm
+---------
+
+For each dot:
+* The dot norm allows selecting a 'disc' (out of 16 discs)
+* The dot angle is updated with the current rotation value (global)
+* The rotated dot angle is looked up into the disc table to find the appropriate position
+

@@ -11,7 +11,9 @@
 
 	SEG.U ram
 	ORG $0080
+frame_cnt	ds  1
 	include "zik/spookjaune_variables.asm"
+	include "src/fx_variables.asm"
 
 
 ;;;-----------------------------------------------------------------------------
@@ -20,8 +22,8 @@
 	SEG code
 	ORG $F000
 init	CLEAN_START		; Initializes Registers & Memory
-	jsr fx_init
 	include "zik/spookjaune_init.asm"
+	jsr fx_init
 
 main_loop:
 	VERTICAL_SYNC		; 4 scanlines Vertical Sync signal
@@ -30,7 +32,10 @@ main_loop:
 	lda #39			; (/ (* 34.0 76) 64) = 40.375
 	sta TIM64T
 
+	; House keeping
 	include "zik/spookjaune_player.asm"
+	inc frame_cnt
+
 	jsr fx_vblank
 	jsr wait_timint
 
