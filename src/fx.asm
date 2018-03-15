@@ -109,8 +109,8 @@ fx_overscan SUBROUTINE
 	rts
 
 ; Data
-	INCLUDE "generated/fx_data.asm"
-	INCLUDE "generated/fx_tables.asm"
+	INCLUDE "fx_data.asm"
+	INCLUDE "fx_tables.asm"
 
 fx_cylangle:
 	dc.b $00, $08, $10, $18, $04, $0c, $14, $1c

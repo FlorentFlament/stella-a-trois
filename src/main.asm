@@ -2,8 +2,8 @@
 ;;; Header
 
 	PROCESSOR 6502
-	INCLUDE "include/vcs.h"	; Provides RIOT & TIA memory map
-	INCLUDE "include/macro.h"	; This file includes some helper macros
+	INCLUDE "vcs.h"	; Provides RIOT & TIA memory map
+	INCLUDE "macro.h"	; This file includes some helper macros
 
 
 ;;;-----------------------------------------------------------------------------
@@ -12,8 +12,8 @@
 	SEG.U ram
 	ORG $0080
 frame_cnt	ds  1
-	include "zik/spookjaune_variables.asm"
-	include "src/fx_variables.asm"
+	INCLUDE "spookjaune_variables.asm"
+	INCLUDE "fx_variables.asm"
 
 
 ;;;-----------------------------------------------------------------------------
@@ -22,7 +22,7 @@ frame_cnt	ds  1
 	SEG code
 	ORG $F000
 init	CLEAN_START		; Initializes Registers & Memory
-	include "zik/spookjaune_init.asm"
+	INCLUDE "spookjaune_init.asm"
 	jsr fx_init
 
 main_loop:
@@ -33,7 +33,7 @@ main_loop:
 	sta TIM64T
 
 	; House keeping
-	include "zik/spookjaune_player.asm"
+	INCLUDE "spookjaune_player.asm"
 	inc frame_cnt
 
 	jsr fx_vblank
@@ -61,11 +61,11 @@ wait_timint:
 	beq wait_timint
 	rts
 
-	INCLUDE "src/fx.asm"
+	INCLUDE "fx.asm"
 
 
 ; Data
-	include "zik/spookjaune_trackdata.asm"
+	INCLUDE "spookjaune_trackdata.asm"
 
 	echo "ROM left: ", ($fffc - *)
 ;;;-----------------------------------------------------------------------------
