@@ -1,9 +1,9 @@
-; Position of the dot must be in Y register
+; Position of the dot must be in tmp register
 	MAC fx_position_dot
 	; Position next plot
-	sleep 12
+	sleep 7
 	sec
-	tya
+	lda tmp
 .rough_loop:
 	; The pos_star loop consumes 15 (5*3) pixels
 	sbc #$0f	      ; 2 cycles
@@ -19,25 +19,25 @@
 	sta HMP0 ; Fine position of missile or sprite
 	ENDM
 
-; The dot number to compute is in X
-; Returns the position of the dot in A
+; The dot number to compute is in line_idx
+; Returns the position of the dot in A reg
+; This macro uses Y reg
 	MAC fx_compute_dot
-	txa
-	tay ; both Y and X are used later
-	lda (cylnorm_ptr),Y
+	ldy line_idx
+	lda (turn_shape_ptr),Y
 	; Fetch corresponding disc
 	tay
 	lda fx_disc_l,Y
 	sta disc_ptr
 	lda fx_disc_h,Y
-	sta disc_ptr+1
+	sta disc_ptr + 1
 
 	; Fetch angle and add rotation
 	clc
-	txa
+	lda line_idx
 	and #$07
 	tay
-	lda fx_cylangle,Y
+	lda fx_turn_angle,Y
 	asl
 	adc frame_cnt
 	lsr
@@ -57,11 +57,12 @@ fx_turn SUBROUTINE
 	lda #$01
 	sta CTRLPF
 
-	ldx #63 ; points
+	lda #63 ; points
+	sta line_idx
 .next_line:
-	; Compute next dot position & put it in Y
+	; Compute next dot position
 	fx_compute_dot
-	tay
+	sta tmp
 	; Ensure the plot has been drawned
 	sta WSYNC
 
@@ -69,21 +70,23 @@ fx_turn SUBROUTINE
 	lda #$00
 	sta GRP0
 	; Set Playfield
-	lda fx_turn_pf,X
+	ldy line_idx
+	lda fx_turn_pf,Y
 	sta PF1
-	; Set color for next point
-	lda fx_ycol,X
+	; Set the appropriate dot color
+	lda (turn_color_ptr),Y
 	sta COLUP0
 	; Set position for next point
 	fx_position_dot
-
 	; Prepare to display next dot
 	sta WSYNC
 	sta HMOVE
+
+	; Turn on P0
 	lda #$01
 	sta GRP0
-
-	dex
+	; Loop until last line has been drawn
+	dec line_idx
 	bpl .next_line
 
 	lda #0
@@ -94,7 +97,7 @@ fx_turn SUBROUTINE
 	sta GRP0
 	rts
 
-fx_cylangle:
+fx_turn_angle:
 	dc.b $00, $08, $10, $18, $04, $0c, $14, $1c
 
 ; Data
@@ -102,14 +105,14 @@ fx_cylangle:
 	INCLUDE "fx_tables.asm"
 
 	ALIGN 256
-fx_ycol:
-	dc.b $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a
-	dc.b $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a
-	dc.b $2e, $2e, $2e, $2e, $2e, $2e, $2e, $2e
-	dc.b $2e, $2e, $2e, $2e, $2e, $2e, $2e, $2e
-	dc.b $2e, $2e, $2e, $2e, $2e, $2e, $2e, $2e
-	dc.b $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
-	dc.b $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
+karmeliet_color:
+	dc.b $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
+	dc.b $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
+	dc.b $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
+	dc.b $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c
+	dc.b $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c
+	dc.b $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c
+	dc.b $2c, $2c, $2c, $2c, $2c, $2c, $0e, $0e
 	dc.b $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
 
 fx_turn_pf:

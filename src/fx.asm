@@ -1,8 +1,12 @@
 fx_init SUBROUTINE
 	lda #<karmeliet
-	sta cylnorm_ptr
+	sta turn_shape_ptr
 	lda #>karmeliet
-	sta cylnorm_ptr+1
+	sta turn_shape_ptr + 1
+	lda #<karmeliet_color
+	sta turn_color_ptr
+	lda #>karmeliet_color
+	sta turn_color_ptr + 1
 	rts
 
 fx_vblank SUBROUTINE
