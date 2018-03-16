@@ -11,7 +11,8 @@
 
 	SEG.U ram
 	ORG $0080
-frame_cnt	ds  1
+frame_cnt	ds 1
+tmp	ds 1
 	INCLUDE "spookjaune_variables.asm"
 	INCLUDE "fx_variables.asm"
 
