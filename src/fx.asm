@@ -1,25 +1,42 @@
 fx_init SUBROUTINE
-	lda #<karmeliet
-	sta turn_shape_ptr
-	lda #>karmeliet
-	sta turn_shape_ptr + 1
-	lda #<karmeliet_color
-	sta turn_color_ptr
-	lda #>karmeliet_color
-	sta turn_color_ptr + 1
 	rts
 
 fx_vblank SUBROUTINE
 	rts
 
+
+fx_turn_prepare SUBROUTINE
+	lda #<karmeliet
+	sta ptr1
+	lda #>karmeliet
+	sta ptr1 + 1
+	lda #<karmeliet_color
+	sta ptr2
+	lda #>karmeliet_color
+	sta ptr2 + 1
+	rts
+
 fx_kernel SUBROUTINE
+	; First GFX is 50 lines
 	ldy #49
-.next_line:
+.gfx1_next_line:
 	sta WSYNC
 	dey
-	bpl .next_line
+	bpl .gfx1_next_line
 
+	; Turning shape FX
+	jsr fx_turn_prepare
 	jsr fx_turn
+
+	; Second GFX of 34 lines
+	ldy #33
+.gfx2_next_line:
+	sta WSYNC
+	dey
+	bpl .gfx2_next_line
+
+	;jsr fx_text
+
 	rts
 
 fx_overscan SUBROUTINE

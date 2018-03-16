@@ -13,6 +13,10 @@
 	ORG $0080
 frame_cnt	ds 1
 tmp	ds 1
+tmp1	ds 1
+ptr	ds 2
+ptr1	ds 2
+ptr2	ds 2
 	INCLUDE "spookjaune_variables.asm"
 	INCLUDE "fx_variables.asm"
 
