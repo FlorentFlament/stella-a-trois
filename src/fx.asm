@@ -1,9 +1,14 @@
 fx_init SUBROUTINE
+	jsr fx_text_init
 	rts
 
 fx_vblank SUBROUTINE
+	lda #<text
+	sta ptr
+	lda #>text
+	sta ptr + 1
+	jsr fx_text_load
 	rts
-
 
 fx_turn_prepare SUBROUTINE
 	lda #<karmeliet
@@ -35,12 +40,16 @@ fx_kernel SUBROUTINE
 	dey
 	bpl .gfx2_next_line
 
-	;jsr fx_text
+	jsr fx_text
 
 	rts
 
 fx_overscan SUBROUTINE
 	rts
 
+text:
+	dc.b " KARMELIET  "
+
 ; External code
 	INCLUDE "fx_turn.asm"
+	INCLUDE "fx_text.asm"
