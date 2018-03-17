@@ -3,9 +3,7 @@ from sys import argv
 from PIL import Image
 
 from asmlib import lst2asm
-
-class BadImageException(Exception):
-    pass
+from imglib import BadImageException
 
 # Check that each line has not more than 1 white pixel
 def sanity_check(im):

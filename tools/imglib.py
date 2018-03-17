@@ -1,0 +1,2 @@
+class BadImageException(Exception):
+    pass
