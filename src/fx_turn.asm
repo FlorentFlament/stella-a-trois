@@ -1,7 +1,7 @@
 ; Position of the dot must be in tmp register
 	MAC fx_position_dot
 	; Position next plot
-	sleep 7
+	sleep 15
 	sec
 	lda tmp
 .rough_loop:
@@ -57,12 +57,14 @@ fx_turn SUBROUTINE
 	sta PF0
 	sta PF1
 	sta PF2
-	lda #$22
+	lda #$28
 	sta COLUPF
 	lda #$01
 	sta CTRLPF
+	lda #$0e
+	sta COLUP0
 
-	lda #63 ; points
+	lda #47 ; points
 	sta tmp1
 .next_line:
 	; Compute next dot position
@@ -70,6 +72,7 @@ fx_turn SUBROUTINE
 	sta tmp
 	; Ensure the plot has been drawned
 	sta WSYNC
+	sta WSYNC ; Make thick plots
 
 	; turn off P0
 	lda #$00
@@ -78,9 +81,6 @@ fx_turn SUBROUTINE
 	ldy tmp1
 	lda fx_turn_pf,Y
 	sta PF1
-	; Set the appropriate dot color
-	lda (ptr2),Y
-	sta COLUP0
 	; Set position for next point
 	fx_position_dot
 	; Prepare to display next dot
@@ -96,6 +96,7 @@ fx_turn SUBROUTINE
 
 	lda #0
 	sta WSYNC
+	sta WSYNC
 	sta COLUBK
 	sta COLUPF
 	sta COLUP0
@@ -109,18 +110,6 @@ fx_turn_angle:
 	INCLUDE "fx_data.asm"
 	INCLUDE "fx_tables.asm"
 
-PART_FX_TURN_ALIGNED equ *
-	ALIGN 256
-	echo "Loss due to alignment (FX Turn):", (* - PART_FX_TURN_ALIGNED)d, "bytes"
-karmeliet_color:
-	dc.b $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
-	dc.b $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
-	dc.b $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
-	dc.b $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c
-	dc.b $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c
-	dc.b $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c
-	dc.b $2c, $2c, $2c, $2c, $2c, $2c, $0e, $0e
-	dc.b $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
 fx_turn_pf:
 	dc.b $00, $aa, $aa, $aa, $aa, $aa, $aa, $00
 	dc.b $00, $54, $54, $54, $54, $54, $54, $00

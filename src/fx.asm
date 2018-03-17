@@ -15,10 +15,6 @@ fx_turn_prepare SUBROUTINE
 	sta ptr1
 	lda #>karmeliet
 	sta ptr1 + 1
-	lda #<karmeliet_color
-	sta ptr2
-	lda #>karmeliet_color
-	sta ptr2 + 1
 	rts
 
 fx_kernel SUBROUTINE
