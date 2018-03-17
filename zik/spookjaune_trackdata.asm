@@ -301,4 +301,4 @@ tt_SequenceTable:
         dc.b $8d
 
 
-        echo "Track size: ", *-tt_TrackDataStart
+        echo "Track size: ", (*-tt_TrackDataStart)d, "bytes"

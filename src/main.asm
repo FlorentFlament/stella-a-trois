@@ -66,13 +66,14 @@ wait_timint:
 	beq wait_timint
 	rts
 
+PARTFX equ *
 	INCLUDE "fx.asm"
-
+	echo "FX size: ", (* - PARTFX)d, "bytes"
 
 ; Data
 	INCLUDE "spookjaune_trackdata.asm"
 
-	echo "ROM left: ", ($fffc - *)
+	echo "ROM left: ", ($fffc - *)d, "bytes"
 ;;;-----------------------------------------------------------------------------
 ;;; Reset Vector
 

@@ -337,4 +337,4 @@ tt_Bit6Set:     ; This opcode has bit #6 set, for use with bit instruction
         dex
         bpl .updateLoop
 
-        echo "Music player size: ", *-tt_PlayerStart
+        echo "Music player size: ", (*-tt_PlayerStart)d, "bytes"

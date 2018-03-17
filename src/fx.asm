@@ -51,5 +51,9 @@ text:
 	dc.b " KARMELIET  "
 
 ; External code
+PART_FX_TURN equ *
 	INCLUDE "fx_turn.asm"
+	echo "FX Turn size: ", (* - PART_FX_TURN)d, "bytes"
+PART_FX_TEXT equ *
 	INCLUDE "fx_text.asm"
+	echo "FX Text size: ", (* - PART_FX_TEXT)d, "bytes"

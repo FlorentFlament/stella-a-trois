@@ -1,4 +1,6 @@
+PART_FX_TEXT_ALIGNED equ *
 	ALIGN 256
+	echo "Loss due to alignment (FX Text):", (* - PART_FX_TEXT_ALIGNED)d, "bytes"
 fx_text_font:
 	dc.b $00, $00, $00, $00, $00, $00, $00, $00 ; <SPC>
 	dc.b $18, $3c, $66, $7e, $66, $66, $66, $00 ; A

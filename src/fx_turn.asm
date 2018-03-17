@@ -109,7 +109,9 @@ fx_turn_angle:
 	INCLUDE "fx_data.asm"
 	INCLUDE "fx_tables.asm"
 
+PART_FX_TURN_ALIGNED equ *
 	ALIGN 256
+	echo "Loss due to alignment (FX Turn):", (* - PART_FX_TURN_ALIGNED)d, "bytes"
 karmeliet_color:
 	dc.b $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
 	dc.b $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
@@ -128,4 +130,3 @@ fx_turn_pf:
 	dc.b $00, $54, $54, $54, $54, $54, $54, $00
 	dc.b $00, $aa, $aa, $aa, $aa, $aa, $aa, $00
 	dc.b $00, $54, $54, $54, $54, $54, $54, $00
-
