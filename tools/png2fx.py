@@ -19,12 +19,12 @@ def sanity_check(im):
 
 def im2fx(im):
     width, height = im.size
-    res = [None]*height
+    res = [0]*height
 
     for y in range(height):
         for x in range(width):
             if im.getpixel((x,y)) != 0:
-                res[y] = x;
+                res[y] = x+1;
                 break
 
     res.reverse()
@@ -32,9 +32,12 @@ def im2fx(im):
 
 def main():
     fname = argv[1]
+    sname = argv[2] # symbol name
+
     # Convert to pure B&W without alpha picture
     im = Image.open(fname).convert('1')
     sanity_check(im)
+    print("{}:".format(sname))
     print(lst2asm(im2fx(im)))
 
 main()

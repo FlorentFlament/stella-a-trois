@@ -2,7 +2,7 @@
 from math import *
 from asmlib import lst2asm
 
-MAX_DISC_SIZE = 15
+MAX_DISC_SIZE = 16
 RESOLUTION = 32
 
 def gendisc(disc_n, disc_max, res):
@@ -13,16 +13,18 @@ def gendisc(disc_n, disc_max, res):
     return map(r, range(res))
 
 def main():
-    for i in range(MAX_DISC_SIZE + 1):
+    for i in range(1, MAX_DISC_SIZE + 1):
         print("fx_disc_{}:".format(i));
         print(lst2asm(gendisc(i, MAX_DISC_SIZE, RESOLUTION)))
 
     print("fx_disc_l:")
-    for i in range(MAX_DISC_SIZE + 1):
+    print("\tdc.b #0 ; Unused")
+    for i in range(1, MAX_DISC_SIZE + 1):
         print("\tdc.b #<fx_disc_{}".format(i))
 
     print("fx_disc_h:")
-    for i in range(MAX_DISC_SIZE + 1):
+    print("\tdc.b #0 ; Unused")
+    for i in range(1, MAX_DISC_SIZE + 1):
         print("\tdc.b #>fx_disc_{}".format(i))
 
 main()

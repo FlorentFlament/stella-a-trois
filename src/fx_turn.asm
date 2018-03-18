@@ -25,6 +25,8 @@
 	MAC fx_compute_dot
 	ldy tmp1
 	lda (ptr1),Y
+	beq .end ; Keep 0 in A if no point
+
 	; Fetch corresponding disc
 	tay
 	lda fx_disc_l,Y
@@ -44,6 +46,7 @@
 	and #$1f
 	tay
 	lda (ptr),Y
+.end:
 	ENDM
 
 ; ptr1 must contain the pointer towards the 'turn shape'
@@ -84,9 +87,12 @@ fx_turn SUBROUTINE
 	sta WSYNC
 	sta HMOVE
 
-	; Turn on P0
+	; Turn on P0 if we have a dot to display
+	lda tmp
+	beq .no_dot
 	lda #$01
 	sta GRP0
+.no_dot:
 	; Loop until last line has been drawn
 	dec tmp1
 	bpl .next_line
