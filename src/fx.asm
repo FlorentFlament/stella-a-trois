@@ -1,3 +1,14 @@
+; External code
+PART_FX_GRAPH equ *
+	INCLUDE "fx_graph.asm"
+	echo "FX Graph size: ", (* - PART_FX_GRAPH)d, "bytes"
+PART_FX_TURN equ *
+	INCLUDE "fx_turn.asm"
+	echo "FX Turn size: ", (* - PART_FX_TURN)d, "bytes"
+PART_FX_TEXT equ *
+	INCLUDE "fx_text.asm"
+	echo "FX Text size: ", (* - PART_FX_TEXT)d, "bytes"
+
 ; FX Initializtion - This is a subroutine because this file is loaded
 ; after the call to fx_init
 fx_init SUBROUTINE
@@ -6,7 +17,7 @@ fx_init SUBROUTINE
 
 ; FX VBlank code
 	MAC m_fx_vblank
-	;jsr fx_turn_vblank
+	; m_fx_turn_vblank
 
 	lda #<text
 	sta ptr
@@ -74,17 +85,6 @@ fx_graph_top_prepare SUBROUTINE
 
 text:
 	dc.b " KARMELIET  "
-
-; External code
-PART_FX_GRAPH equ *
-	INCLUDE "fx_graph.asm"
-	echo "FX Graph size: ", (* - PART_FX_GRAPH)d, "bytes"
-PART_FX_TURN equ *
-	INCLUDE "fx_turn.asm"
-	echo "FX Turn size: ", (* - PART_FX_TURN)d, "bytes"
-PART_FX_TEXT equ *
-	INCLUDE "fx_text.asm"
-	echo "FX Text size: ", (* - PART_FX_TEXT)d, "bytes"
 
 ; data
 	INCLUDE "robot_top.asm"

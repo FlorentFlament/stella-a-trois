@@ -1,5 +1,5 @@
 ; Position of the dot must be in tmp register
-	MAC fx_position_dot
+	MAC m_fx_position_dot
 	; Position next plot
 	sleep 15
 	sec
@@ -22,7 +22,7 @@
 ; The dot number to compute is in tmp1
 ; Returns the position of the dot in A reg
 ; This macro uses Y reg
-	MAC fx_compute_dot
+	MAC m_fx_compute_dot
 	ldy tmp1
 	lda (ptr1),Y
 	beq .end ; Keep 0 in A if no point
@@ -70,7 +70,7 @@ fx_turn SUBROUTINE
 	sta tmp1
 .next_line:
 	sta WSYNC
-	fx_compute_dot
+	m_fx_compute_dot
 	sta tmp
 	sta WSYNC ; Make thick plots
 
@@ -82,7 +82,7 @@ fx_turn SUBROUTINE
 	lda fx_turn_pf,Y
 	sta PF1
 	; Set position for next point
-	fx_position_dot
+	m_fx_position_dot
 	; Prepare to display next dot
 	sta WSYNC
 	sta HMOVE
