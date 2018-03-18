@@ -15,9 +15,23 @@ fx_init SUBROUTINE
 	jsr fx_text_init
 	rts
 
+; FX Timeline
+	MAC m_fx_timeline
+	lda time
+	and #$01
+	bne .end
+	lda frame_cnt
+	and #$fe ; Here frame_cnt is never 0
+	bne .end
+	lda #0
+	sta fx_rot_state
+.end:
+	ENDM
+
 ; FX VBlank code
 	MAC m_fx_vblank
-	; m_fx_turn_vblank
+	m_fx_timeline
+	m_fx_turn_housekeep
 
 	lda #<text
 	sta ptr

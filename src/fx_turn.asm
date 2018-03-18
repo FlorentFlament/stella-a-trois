@@ -1,3 +1,27 @@
+; Frame per frame house keeping
+	MAC m_fx_turn_housekeep
+FX_TURN_HOUSEKEEP equ *
+	lda fx_rot_state
+
+	; Update dot color
+	cmp #8
+	bcs .white
+	asl
+	jmp .continue
+.white:
+	lda #$0e
+.continue:
+	sta fx_rot_color
+
+	; Increment fx_rot_state
+	lda frame_cnt
+	and #$07
+	bne .end
+	inc fx_rot_state
+.end:
+	echo "FX Turn Housekeep size: ", (* - FX_TURN_HOUSEKEEP)d, "bytes"
+	ENDM
+
 ; Position of the dot must be in tmp register
 	MAC m_fx_position_dot
 	; Position next plot
@@ -63,7 +87,7 @@ fx_turn SUBROUTINE
 	sta COLUPF
 	lda #$01
 	sta CTRLPF ; mirror mode
-	lda #$0e
+	lda fx_rot_color
 	sta COLUP0
 
 	lda #45 ; points
