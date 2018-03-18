@@ -3,7 +3,7 @@
 fx_text_load SUBROUTINE
 	ldy #11 ; Load the 11 characters to be displayed
 .next:
-	; Compute offset in the text_buf buffer and move to X
+	; Compute offset in the txt_buf buffer and move to X
 	tya
 	asl
 	tax
@@ -13,20 +13,17 @@ fx_text_load SUBROUTINE
 	asl
 	asl
 	asl
-	sta text_buf,X
+	sta txt_buf,X
+	; MSB
+	lda #>fx_text_font
+	sta txt_buf+1,X
 
 	dey
 	bpl .next
 	rts
 
-; Initializes text_buf to font MSB
+; Initializes txt_buf to font MSB
 fx_text_init SUBROUTINE
-	lda #>fx_text_font
-	ldy #23
-.next:
-	sta text_buf,Y
-	dey
-	bpl .next
 	rts
 
 fx_text SUBROUTINE
@@ -79,20 +76,20 @@ fx_text SUBROUTINE
 .txt_ln:
 	sta WSYNC		; 3  78
 	sta HMOVE		; 3   3
-	lda (text_buf+2),Y	; 5   8
+	lda (txt_buf+2),Y	; 5   8
 	sta GRP0		; 3  11
-	lda (text_buf+6),Y	; 5  16
+	lda (txt_buf+6),Y	; 5  16
 	sta GRP1		; 3  19
-	lda (text_buf+22),Y	; 5  24
+	lda (txt_buf+22),Y	; 5  24
 	tax		; 2  26 78
 	REPEAT 3
 	nop
 	REPEND     	; 6  32
-	lda (text_buf+10),Y	; 5  37
+	lda (txt_buf+10),Y	; 5  37
 	sta GRP0		; 3  40 120
-	lda (text_buf+14),Y	; 5  45
+	lda (txt_buf+14),Y	; 5  45
 	sta GRP1		; 3  48
-	lda (text_buf+18),Y	; 5  53
+	lda (txt_buf+18),Y	; 5  53
 	sta GRP0		; 3  56
 	stx GRP1		; 3  59 154
 	sta HMCLR	     	; 3  62
@@ -102,11 +99,11 @@ fx_text SUBROUTINE
 	sta HMOVE		; 3  73 - End of scanline
 	;; even lines
 	;; Moving characters 8 pixels to the left
-	lda (text_buf+0),Y	; 5   2
+	lda (txt_buf+0),Y	; 5   2
 	sta GRP0		; 3   5
-	lda (text_buf+4),Y	; 5  10
+	lda (txt_buf+4),Y	; 5  10
 	sta GRP1		; 3  13
-	lda (text_buf+20),Y	; 5  18
+	lda (txt_buf+20),Y	; 5  18
 	tax		; 2  20
 	;; Moving characters 8 pixels to the right
 	lda #$80		; 2  22
@@ -114,11 +111,11 @@ fx_text SUBROUTINE
 	lda #$80		; 2  27
 	sta HMP1		; 3  30
 	;; Updating sprites graphics
-	lda (text_buf+8),Y	; 5  35
+	lda (txt_buf+8),Y	; 5  35
 	sta GRP0		; 3  38
-	lda (text_buf+12),Y	; 5  43
+	lda (txt_buf+12),Y	; 5  43
 	sta GRP1		; 3  46
-	lda (text_buf+16),Y	; 5  51
+	lda (txt_buf+16),Y	; 5  51
 	sta GRP0		; 3  54
 	stx GRP1		; 3  57
 	;; looping logic
@@ -133,4 +130,4 @@ fx_text SUBROUTINE
 	rts
 
 ; data
-	INCLUDE fx_text_font.asm
+	INCLUDE "fx_text_font.asm"

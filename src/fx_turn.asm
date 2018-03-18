@@ -47,7 +47,6 @@
 	ENDM
 
 ; ptr1 must contain the pointer towards the 'turn shape'
-; ptr2 must contain the pointer towards the 'turn color'
 ; ptr  is used by the subroutine
 ; tmp  is used by the subroutine
 ; tmp1 is used by the subroutine
@@ -60,18 +59,16 @@ fx_turn SUBROUTINE
 	lda #$28
 	sta COLUPF
 	lda #$01
-	sta CTRLPF
+	sta CTRLPF ; mirror mode
 	lda #$0e
 	sta COLUP0
 
 	lda #47 ; points
 	sta tmp1
 .next_line:
-	; Compute next dot position
+	sta WSYNC
 	fx_compute_dot
 	sta tmp
-	; Ensure the plot has been drawned
-	sta WSYNC
 	sta WSYNC ; Make thick plots
 
 	; turn off P0

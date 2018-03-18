@@ -61,4 +61,9 @@ def main():
         print_block(pf, "{}_pf{}".format(sname, i))
     print_block(hrpf.get_all_cols(), "{}_cols".format(sname))
 
+    print("{}_ptr:".format(sname))
+    print("\tdc.w {}_cols".format(sname))
+    for i in range(6):
+        print("\tdc.w {}_pf{}".format(sname, i))
+
 main()
