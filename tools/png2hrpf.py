@@ -4,7 +4,7 @@ from sys import argv
 from PIL import Image
 
 from asmlib import lst2asm
-from imglib import BadImageException
+from imglib import *
 
 # Mapping from the 'atari_vcs_pal' palette to Stella colors
 palette = [
@@ -26,20 +26,13 @@ palette = [
 class HiResPF:
     # A couple of static methods and fields
 
-    def __lbool2int(lst):
-        r = 0
-        for b in lst:
-            r <<= 1
-            r |= b
-        return r
-
     __line_pf = [
-        lambda l: HiResPF.__lbool2int(itertools.chain(reversed(l[0:4]), [False]*4)),
-        lambda l: HiResPF.__lbool2int(l[4:12]),
-        lambda l: HiResPF.__lbool2int(reversed(l[12:20])),
-        lambda l: HiResPF.__lbool2int(itertools.chain(reversed(l[20:24]), [False]*4)),
-        lambda l: HiResPF.__lbool2int(l[24:32]),
-        lambda l: HiResPF.__lbool2int(reversed(l[32:40])),
+        lambda l: lbool2int(itertools.chain(reversed(l[0:4]), [False]*4)),
+        lambda l: lbool2int(l[4:12]),
+        lambda l: lbool2int(reversed(l[12:20])),
+        lambda l: lbool2int(itertools.chain(reversed(l[20:24]), [False]*4)),
+        lambda l: lbool2int(l[24:32]),
+        lambda l: lbool2int(reversed(l[32:40])),
     ]
 
     def __init__(self, image):

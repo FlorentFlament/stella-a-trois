@@ -30,9 +30,8 @@ fx_text SUBROUTINE
 	lda #$06 ; 3 copies small (Number & Size)
 	sta NUSIZ0
 	sta NUSIZ1
-	lda #$0a
+	lda #$2e
 	sta COLUP0
-	lda #$2c
 	sta COLUP1
 
 	; TODO Update this to have a finer an customizable position
