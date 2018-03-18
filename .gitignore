@@ -2,4 +2,5 @@ main.bin
 main.lst
 main.sym
 generated/
+venv/
 *~
