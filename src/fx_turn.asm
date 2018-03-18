@@ -63,7 +63,7 @@ fx_turn SUBROUTINE
 	lda #$0e
 	sta COLUP0
 
-	lda #47 ; points
+	lda #45 ; points
 	sta tmp1
 .next_line:
 	sta WSYNC
@@ -108,9 +108,9 @@ fx_turn_angle:
 	INCLUDE "fx_tables.asm"
 
 fx_turn_pf:
-	dc.b $00, $aa, $aa, $aa, $aa, $aa, $aa, $00
-	dc.b $00, $54, $54, $54, $54, $54, $54, $00
-	dc.b $00, $aa, $aa, $aa, $aa, $aa, $aa, $00
-	dc.b $00, $54, $54, $54, $54, $54, $54, $00
-	dc.b $00, $aa, $aa, $aa, $aa, $aa, $aa, $00
-	dc.b $00, $54, $54, $54, $54, $54, $54, $00
+	dc.b $00, $aa, $aa, $aa, $00, $54, $54, $54
+	dc.b $00, $aa, $aa, $aa, $00, $54, $54, $54
+	dc.b $00, $aa, $aa, $aa, $00, $54, $54, $54
+	dc.b $00, $aa, $aa, $aa, $00, $54, $54, $54
+	dc.b $00, $aa, $aa, $aa, $00, $54, $54, $54
+	dc.b $00, $aa, $aa, $aa, $00, $00, $00, $00

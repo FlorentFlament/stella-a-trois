@@ -8,6 +8,10 @@ fx_vblank SUBROUTINE
 	lda #>text
 	sta ptr + 1
 	jsr fx_text_load
+	lda #<robot_top_ptr
+	sta ptr
+	lda #>robot_top_ptr
+	sta ptr + 1
 	jsr fx_graph_top_prepare
 	rts
 
@@ -18,10 +22,11 @@ fx_turn_prepare SUBROUTINE
 	sta ptr1 + 1
 	rts
 
+; ptr should point towards the graph to display
 fx_graph_top_prepare SUBROUTINE
 	ldy #2*7-1 ; 7 pointers
 .next
-	lda robot_top_ptr,Y
+	lda (ptr),Y
 	sta fx_buf,Y
 	dey
 	bpl .next
@@ -38,11 +43,13 @@ fx_kernel SUBROUTINE
 	jsr fx_turn
 
 	; Second GFX of 34 lines
-	ldy #33
-.gfx2_next_line:
-	sta WSYNC
-	dey
-	bpl .gfx2_next_line
+	lda #<robot_bottom_ptr
+	sta ptr
+	lda #>robot_bottom_ptr
+	sta ptr + 1
+	jsr fx_graph_top_prepare
+	ldy #34-1
+	jsr fx_graph
 
 	jsr fx_text
 

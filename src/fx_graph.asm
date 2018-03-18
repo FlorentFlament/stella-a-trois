@@ -38,3 +38,4 @@ fx_graph SUBROUTINE
 
 ; data
 	INCLUDE "robot_top.asm"
+	INCLUDE "robot_bottom.asm"
