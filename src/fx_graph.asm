@@ -29,13 +29,10 @@ fx_graph SUBROUTINE
 	sta PF2
 	dey
 	bpl .next
+	sta WSYNC
 
 	lda #0
 	sta PF0
 	sta PF1
 	sta PF2
 	rts
-
-; data
-	INCLUDE "robot_top.asm"
-	INCLUDE "robot_bottom.asm"

@@ -71,3 +71,7 @@ PART_FX_TURN equ *
 PART_FX_TEXT equ *
 	INCLUDE "fx_text.asm"
 	echo "FX Text size: ", (* - PART_FX_TEXT)d, "bytes"
+
+; data
+	INCLUDE "robot_top.asm"
+	INCLUDE "robot_bottom.asm"
