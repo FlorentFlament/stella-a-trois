@@ -28,6 +28,10 @@ ptr1	ds 2
 init	CLEAN_START		; Initializes Registers & Memory
 	INCLUDE "spookjaune_init.asm"
 	jsr fx_init
+	jsr main_loop
+
+	; Import FX macros and subroutines
+	INCLUDE "fx.asm"
 
 main_loop:
 	VERTICAL_SYNC		; 4 scanlines Vertical Sync signal
@@ -40,19 +44,19 @@ main_loop:
 	INCLUDE "spookjaune_player.asm"
 	inc frame_cnt
 
-	jsr fx_vblank
+	m_fx_vblank
 	jsr wait_timint
 
 	; 248 Kernel lines
 	lda #19			; (/ (* 248.0 76) 1024) = 18.40
 	sta T1024T
-	jsr fx_kernel		; scanline 33 - cycle 23
+	m_fx_kernel		; scanline 33 - cycle 23
 	jsr wait_timint		; scanline 289 - cycle 30
 
 	; 26 Overscan lines
 	lda #22			; (/ (* 26.0 76) 64) = 30.875
 	sta TIM64T
-	jsr fx_overscan
+	m_fx_overscan
 	jsr wait_timint
 
 	jmp main_loop		; scanline 308 - cycle 15
@@ -65,13 +69,8 @@ wait_timint:
 	beq wait_timint
 	rts
 
-PARTFX equ *
-	INCLUDE "fx.asm"
-	echo "FX size: ", (* - PARTFX)d, "bytes"
-
 ; Data
 	INCLUDE "spookjaune_trackdata.asm"
-
 	echo "ROM left: ", ($fffc - *)d, "bytes"
 ;;;-----------------------------------------------------------------------------
 ;;; Reset Vector

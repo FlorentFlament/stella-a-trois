@@ -1,38 +1,38 @@
+; FX Initializtion - This is a subroutine because this file is loaded
+; after the call to fx_init
 fx_init SUBROUTINE
 	jsr fx_text_init
 	rts
 
-fx_vblank SUBROUTINE
+; FX VBlank code
+	MAC m_fx_vblank
+	;jsr fx_turn_vblank
+
 	lda #<text
 	sta ptr
 	lda #>text
 	sta ptr + 1
 	jsr fx_text_load
+
 	lda #<robot_top_ptr
 	sta ptr
 	lda #>robot_top_ptr
 	sta ptr + 1
 	jsr fx_graph_top_prepare
-	rts
+	ENDM
 
-fx_turn_prepare SUBROUTINE
-	lda #<karmeliet
-	sta ptr1
-	lda #>karmeliet
-	sta ptr1 + 1
-	rts
+; FX Overscan code
+	MAC m_fx_overscan
+	; Increment time every 64 frames
+	lda frame_cnt
+	and #$3f
+	bne .continue
+	inc time
+.continue:
+	ENDM
 
-; ptr should point towards the graph to display
-fx_graph_top_prepare SUBROUTINE
-	ldy #2*7-1 ; 7 pointers
-.next
-	lda (ptr),Y
-	sta fx_buf,Y
-	dey
-	bpl .next
-	rts
-
-fx_kernel SUBROUTINE
+; FX Kernel code
+	MAC m_fx_kernel
 	; First GFX is 50 lines
 	ldy #50-1
 	sta WSYNC ; consume out of screen line
@@ -52,11 +52,25 @@ fx_kernel SUBROUTINE
 	jsr fx_graph
 
 	jsr fx_text
+	ENDM
 
+fx_turn_prepare SUBROUTINE
+	lda #<karmeliet
+	sta ptr1
+	lda #>karmeliet
+	sta ptr1 + 1
 	rts
 
-fx_overscan SUBROUTINE
+; ptr should point towards the graph to display
+fx_graph_top_prepare SUBROUTINE
+	ldy #2*7-1 ; 7 pointers
+.next
+	lda (ptr),Y
+	sta fx_buf,Y
+	dey
+	bpl .next
 	rts
+
 
 text:
 	dc.b " KARMELIET  "

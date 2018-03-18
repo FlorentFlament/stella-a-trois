@@ -100,7 +100,6 @@ fx_turn SUBROUTINE
 	lda #0
 	sta WSYNC
 	sta WSYNC
-	sta COLUBK
 	sta COLUPF
 	sta COLUP0
 	sta GRP0
