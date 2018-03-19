@@ -13,18 +13,19 @@ gfx_top.asm \
 gfx_bottom.asm \
 )
 
-TURNED_SHAPES_A=$(patsubst fx_pics/turned_shapes/%.png, \
-			   generated/turned_shapes/%.asm, \
-		           $(wildcard fx_pics/turned_shapes/*.png))
+TURNPDIR=fx_pics/turned_shapes
+TURNADIR=generated/turned_shapes
+
+TURNSHAPES=$(patsubst $(TURNPDIR)/%.png, \
+			$(TURNADIR)/%.asm, \
+			$(wildcard $(TURNPDIR)/*.png))
+
+MDGEN=mkdir -p generated
+MDTUR=mkdir -p generated/turned_shapes
+VENV=. venv/bin/activate;
 
 main.bin: src/main.asm $(SRC) $(ZIK) $(GEN)
 	dasm $< -o$@ -lmain.lst -smain.sym $(DFLAGS)
-
-generated:
-	mkdir generated
-
-generated/turned_shapes: generated
-	mkdir -p generated/turned_shapes
 
 venv: venv/bin/activate
 
@@ -33,28 +34,29 @@ venv/bin/activate: tools/requirements.txt
 	. venv/bin/activate; pip install -Ur $<
 	touch venv/bin/activate
 
-generated/turned_shapes/%.asm: fx_pics/turned_shapes/%.png generated/turned_shapes
-	. venv/bin/activate;\
-	python tools/png2fx.py $< $(patsubst fx_pics/turned_shapes/%.png,%,$<) > $@
+$(TURNADIR)/%.asm: $(TURNPDIR)/%.png
+	$(MDTUR)
+	$(VENV) python tools/png2fx.py $< $(patsubst fx_pics/turned_shapes/%.png,%,$<) > $@
 
-generated/fx_turn_tables.asm: venv generated
-	. venv/bin/activate;\
-	python tools/costables.py > $@
+generated/fx_turn_tables.asm: venv
+	$(MDGEN)
+	$(VENV) python tools/costables.py > $@
 
-generated/fx_turn_data.asm: venv generated $(TURNED_SHAPES_A)
-	cat $(TURNED_SHAPES_A) > $@
+generated/fx_turn_data.asm: $(TURNSHAPES)
+	$(MDGEN)
+	cat $(TURNSHAPES) > $@
 
-generated/fx_text_font.asm: venv generated
-	. venv/bin/activate;\
-	python tools/pngfont.py fx_pics/glafont/ > $@
+generated/fx_text_font.asm: venv
+	$(MDGEN)
+	$(VENV) python tools/pngfont.py fx_pics/glafont/ > $@
 
-generated/gfx_top.asm: venv generated
-	. venv/bin/activate;\
-	python tools/png2hrpf.py fx_pics/stella_07_top_40x50.png gfx_top > $@
+generated/gfx_top.asm: venv
+	$(MDGEN)
+	$(VENV) python tools/png2hrpf.py fx_pics/stella_07_top_40x50.png gfx_top > $@
 
-generated/gfx_bottom.asm: venv generated
-	. venv/bin/activate;\
-	python tools/png2hrpf.py fx_pics/stella_07_bottom_40x34.png gfx_bottom > $@
+generated/gfx_bottom.asm: venv
+	$(MDGEN)
+	$(VENV) python tools/png2hrpf.py fx_pics/stella_07_bottom_40x34.png gfx_bottom > $@
 
 run: main.bin
 	stella $<
