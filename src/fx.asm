@@ -80,9 +80,9 @@ fx_init SUBROUTINE
 	ENDM
 
 fx_turn_prepare SUBROUTINE
-	lda #<karmeliet
+	lda #<duvel
 	sta ptr1
-	lda #>karmeliet
+	lda #>duvel
 	sta ptr1 + 1
 	rts
 
@@ -96,6 +96,12 @@ fx_graph_top_prepare SUBROUTINE
 	bpl .next
 	rts
 
+shapes_ptr_l:
+	dc.w #<karmeliet
+	dc.w #<duvel
+shapes_ptr_h:
+	dc.w #>karmeliet
+	dc.w #>duvel
 
 text:
 	dc.b " KARMELIET  "
