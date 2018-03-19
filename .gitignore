@@ -3,4 +3,5 @@ main.lst
 main.sym
 generated/
 venv/
+tools/__pycache__/
 *~
