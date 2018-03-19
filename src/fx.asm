@@ -18,7 +18,7 @@ fx_init SUBROUTINE
 ; FX Timeline
 	MAC m_fx_timeline
 	lda time
-	and #$01
+	and #$07
 	bne .end
 	lda frame_cnt
 	and #$fe ; Here frame_cnt is never 0

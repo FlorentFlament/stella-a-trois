@@ -1,18 +1,32 @@
 ; Frame per frame house keeping
+TURN_DISP equ 8
+TURN_FADE_OUT equ (TURN_DISP + 40)
+TURN_END equ (TURN_FADE_OUT + 8)
+
 	MAC m_fx_turn_housekeep
 FX_TURN_HOUSEKEEP equ *
+	; 4 possible behaviours:
+	; 0-7 : fade-in
+	; 8-31 : displayed
+	; 32-39 : fade-out
+	; 40+ : black
 	lda fx_rot_state
-
-	; Update dot color
-	cmp #8
-	bcs .white
+	cmp #(TURN_FADE_OUT)
+	bcs .state32
+	cmp #(TURN_DISP)
+	bcs .inc_cpt
 	asl
-	jmp .continue
-.white:
-	lda #$0e
-.continue:
 	sta fx_rot_color
-
+	jmp .inc_cpt
+.state32:
+	cmp #(TURN_END)
+	bcs .end
+	sec
+	lda #(TURN_END - 1)
+	sbc fx_rot_state
+	asl
+	sta fx_rot_color
+.inc_cpt:
 	; Increment fx_rot_state
 	lda frame_cnt
 	and #$07
@@ -25,7 +39,7 @@ FX_TURN_HOUSEKEEP equ *
 ; Position of the dot must be in tmp register
 	MAC m_fx_position_dot
 	; Position next plot
-	sleep 15
+	sleep 25
 	sec
 	lda tmp
 .rough_loop:
@@ -102,9 +116,9 @@ fx_turn SUBROUTINE
 	lda #$00
 	sta GRP0
 	; Set Playfield
-	ldy tmp1
-	lda fx_turn_pf,Y
-	sta PF1
+	;ldy tmp1
+	;lda fx_turn_pf,Y
+	;sta PF1
 	; Set position for next point
 	m_fx_position_dot
 	; Prepare to display next dot
@@ -143,10 +157,3 @@ fx_turn_pf:
 ;	dc.b $00, $aa, $aa, $aa, $00, $54, $54, $54
 ;	dc.b $00, $aa, $aa, $aa, $00, $54, $54, $54
 ;	dc.b $00, $aa, $aa, $aa, $00, $00, $00, $00
-
-	dc.b $00, $00, $00, $00, $00, $00, $00, $00
-	dc.b $00, $00, $00, $00, $00, $00, $00, $00
-	dc.b $00, $00, $00, $00, $00, $00, $00, $00
-	dc.b $00, $00, $00, $00, $00, $00, $00, $00
-	dc.b $00, $00, $00, $00, $00, $00, $00, $00
-	dc.b $00, $00, $00, $00, $00, $00, $00, $00
