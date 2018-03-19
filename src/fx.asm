@@ -33,16 +33,10 @@ fx_init SUBROUTINE
 	m_fx_timeline
 	m_fx_turn_housekeep
 
-	lda #<text
-	sta ptr
-	lda #>text
-	sta ptr + 1
+	SET_POINTER ptr, text
 	jsr fx_text_load
 
-	lda #<gfx_top_ptr
-	sta ptr
-	lda #>gfx_top_ptr
-	sta ptr + 1
+	SET_POINTER ptr, gfx_top_ptr
 	jsr fx_graph_setup
 	ENDM
 
@@ -54,20 +48,6 @@ fx_init SUBROUTINE
 	bne .continue
 	inc time
 .continue:
-	ENDM
-
-; FX Turn setup
-	MAC m_fx_turn_setup
-	lda time
-	lsr
-	lsr
-	lsr
-	and #$01
-	tay
-	lda shapes_ptr_l,Y
-	sta ptr1
-	lda shapes_ptr_h,Y
-	sta ptr1 + 1
 	ENDM
 
 ; FX Kernel code
@@ -82,23 +62,13 @@ fx_init SUBROUTINE
 	m_fx_turn
 
 	; Second GFX of 34 lines
-	lda #<gfx_bottom_ptr
-	sta ptr
-	lda #>gfx_bottom_ptr
-	sta ptr + 1
+	SET_POINTER ptr, gfx_bottom_ptr
 	jsr fx_graph_setup
 	ldy #34-1
 	jsr fx_graph
 
 	jsr fx_text
 	ENDM
-
-shapes_ptr_l:
-	dc.b #<karmeliet
-	dc.b #<duvel
-shapes_ptr_h:
-	dc.b #>karmeliet
-	dc.b #>duvel
 
 text:
 	dc.b " KARMELIET  "

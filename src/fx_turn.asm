@@ -3,6 +3,21 @@ TURN_DISP equ 8
 TURN_FADE_OUT equ (TURN_DISP + 40)
 TURN_END equ (TURN_FADE_OUT + 8)
 
+; FX Turn setup
+	MAC m_fx_turn_setup
+	lda time
+	lsr
+	lsr
+	lsr
+	and #$01
+	tay
+	lda fx_turn_shapes_l,Y
+	sta ptr1
+	lda fx_turn_shapes_h,Y
+	sta ptr1 + 1
+	ENDM
+
+; FX Turn House Keeping Macro
 	MAC m_fx_turn_housekeep
 FX_TURN_HOUSEKEEP equ *
 	; 4 possible behaviours:
@@ -39,7 +54,7 @@ FX_TURN_HOUSEKEEP equ *
 ; Position of the dot must be in A register
 FXPOS_ALIGNED equ *
 	ALIGN 32
-	echo "Loss due to alignment of FX Position Dot):", (* - FXPOS_ALIGNED)d, "bytes"
+	echo "Loss due to alignment (FX Position Dot):", (* - FXPOS_ALIGNED)d, "bytes"
 fx_position_dot SUBROUTINE
 ROUGH_LOOP_START equ *
 	sta WSYNC
@@ -145,6 +160,13 @@ ROUGH_LOOP_START equ *
 
 fx_turn_angle:
 	dc.b $00, $08, $10, $18, $04, $0c, $14, $1c
+
+fx_turn_shapes_l:
+	dc.b #<karmeliet
+	dc.b #<duvel
+fx_turn_shapes_h:
+	dc.b #>karmeliet
+	dc.b #>duvel
 
 ; Data
 	INCLUDE "fx_turn_data.asm"
