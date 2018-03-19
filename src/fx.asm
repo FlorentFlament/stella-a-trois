@@ -43,7 +43,7 @@ fx_init SUBROUTINE
 	sta ptr
 	lda #>gfx_top_ptr
 	sta ptr + 1
-	jsr fx_graph_top_prepare
+	jsr fx_graph_setup
 	ENDM
 
 ; FX Overscan code
@@ -56,30 +56,8 @@ fx_init SUBROUTINE
 .continue:
 	ENDM
 
-; FX Kernel code
-	MAC m_fx_kernel
-	; First GFX is 50 lines
-	ldy #50-1
-	sta WSYNC ; consume out of screen line
-	jsr fx_graph
-
-	; Turning shape FX
-	jsr fx_turn_prepare
-	jsr fx_turn
-
-	; Second GFX of 34 lines
-	lda #<gfx_bottom_ptr
-	sta ptr
-	lda #>gfx_bottom_ptr
-	sta ptr + 1
-	jsr fx_graph_top_prepare
-	ldy #34-1
-	jsr fx_graph
-
-	jsr fx_text
-	ENDM
-
-fx_turn_prepare SUBROUTINE
+; FX Turn setup
+	MAC m_fx_turn_setup
 	lda time
 	lsr
 	lsr
@@ -90,10 +68,34 @@ fx_turn_prepare SUBROUTINE
 	sta ptr1
 	lda shapes_ptr_h,Y
 	sta ptr1 + 1
-	rts
+	ENDM
+
+; FX Kernel code
+	MAC m_fx_kernel
+	; First GFX is 50 lines
+	ldy #50-1
+	sta WSYNC ; consume out of screen line
+	jsr fx_graph
+
+	; Turning shape FX
+	m_fx_turn_setup
+	m_fx_turn
+
+	; Second GFX of 34 lines
+	lda #<gfx_bottom_ptr
+	sta ptr
+	lda #>gfx_bottom_ptr
+	sta ptr + 1
+	jsr fx_graph_setup
+	ldy #34-1
+	jsr fx_graph
+
+	jsr fx_text
+	ENDM
 
 ; ptr should point towards the graph to display
-fx_graph_top_prepare SUBROUTINE
+; This code is used to setup both top and bottom graphs.
+fx_graph_setup SUBROUTINE
 	ldy #2*7-1 ; 7 pointers
 .next
 	lda (ptr),Y

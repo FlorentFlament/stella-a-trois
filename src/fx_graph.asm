@@ -7,6 +7,7 @@
 ; fx_buf+10 -> PF4
 ; fx_buf+12 -> PF5
 ; Y should contains the number of lines to display -1
+; Note that this code is called for both parts of the graphx
 fx_graph SUBROUTINE
 	lda #$00
 	sta CTRLPF ; non-mirror mode

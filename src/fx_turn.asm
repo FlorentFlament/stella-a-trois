@@ -91,7 +91,7 @@ FX_TURN_HOUSEKEEP equ *
 ; ptr  is used by the subroutine
 ; tmp  is used by the subroutine
 ; tmp1 is used by the subroutine
-fx_turn SUBROUTINE
+	MAC m_fx_turn
 	lda #$00 ; one copy small p0 (Number & Size)
 	sta NUSIZ0
 	sta PF0
@@ -141,7 +141,7 @@ fx_turn SUBROUTINE
 	sta COLUPF
 	sta COLUP0
 	sta GRP0
-	rts
+	ENDM
 
 fx_turn_angle:
 	dc.b $00, $08, $10, $18, $04, $0c, $14, $1c
