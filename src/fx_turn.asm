@@ -3,20 +3,6 @@ TURN_DISP equ 8
 TURN_FADE_OUT equ (TURN_DISP + 40)
 TURN_END equ (TURN_FADE_OUT + 8)
 
-; FX Turn setup
-	MAC m_fx_turn_setup
-	lda time
-	lsr
-	lsr
-	lsr
-	and #$01
-	tay
-	lda fx_turn_shapes_l,Y
-	sta ptr1
-	lda fx_turn_shapes_h,Y
-	sta ptr1 + 1
-	ENDM
-
 ; FX Turn House Keeping Macro
 	MAC m_fx_turn_housekeep
 FX_TURN_HOUSEKEEP equ *
@@ -116,7 +102,7 @@ ROUGH_LOOP_START equ *
 ; ptr  is used by the subroutine
 ; tmp  is used by the subroutine
 ; tmp1 is used by the subroutine
-	MAC m_fx_turn
+	MAC m_fx_turn_kernel
 	lda #$00 ; one copy small p0 (Number & Size)
 	sta NUSIZ0
 	sta PF0
@@ -160,13 +146,6 @@ ROUGH_LOOP_START equ *
 
 fx_turn_angle:
 	dc.b $00, $08, $10, $18, $04, $0c, $14, $1c
-
-fx_turn_shapes_l:
-	dc.b #<karmeliet
-	dc.b #<duvel
-fx_turn_shapes_h:
-	dc.b #>karmeliet
-	dc.b #>duvel
 
 ; Data
 	INCLUDE "fx_turn_data.asm"

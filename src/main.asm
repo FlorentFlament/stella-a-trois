@@ -28,7 +28,7 @@ ptr1	ds 2
 init	CLEAN_START		; Initializes Registers & Memory
 	INCLUDE "spookjaune_init.asm"
 	jsr fx_init
-	jsr main_loop
+	jmp main_loop
 
 	; Import FX macros and subroutines
 	INCLUDE "fx.asm"

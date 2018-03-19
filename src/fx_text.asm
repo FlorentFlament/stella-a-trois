@@ -1,6 +1,6 @@
 ; Text to display is pointed to by ptr
 ; Uses tmp
-fx_text_load SUBROUTINE
+	MAC m_fx_text_load
 	ldy #11 ; Load the 11 characters to be displayed
 .next:
 	; Compute offset in the txt_buf buffer and move to X
@@ -20,13 +20,15 @@ fx_text_load SUBROUTINE
 
 	dey
 	bpl .next
-	rts
+	ENDM
 
 ; Initializes txt_buf to font MSB
-fx_text_init SUBROUTINE
-	rts
+	MAC m_fx_text_init
+	; TBD
+	ENDM
 
-fx_text SUBROUTINE
+; FX Text Kernel
+	MAC m_fx_text_kernel
 	lda #$06 ; 3 copies small (Number & Size)
 	sta NUSIZ0
 	sta NUSIZ1
@@ -126,7 +128,7 @@ fx_text SUBROUTINE
 	lda #$0
 	sta GRP0
 	sta GRP1
-	rts
+	ENDM
 
 ; data
 	INCLUDE "fx_text_font.asm"
