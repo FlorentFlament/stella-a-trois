@@ -171,11 +171,3 @@ fx_turn_shapes_h:
 ; Data
 	INCLUDE "fx_turn_data.asm"
 	INCLUDE "fx_turn_tables.asm"
-
-;fx_turn_pf:
-;	dc.b $00, $aa, $aa, $aa, $00, $54, $54, $54
-;	dc.b $00, $aa, $aa, $aa, $00, $54, $54, $54
-;	dc.b $00, $aa, $aa, $aa, $00, $54, $54, $54
-;	dc.b $00, $aa, $aa, $aa, $00, $54, $54, $54
-;	dc.b $00, $aa, $aa, $aa, $00, $54, $54, $54
-;	dc.b $00, $aa, $aa, $aa, $00, $00, $00, $00
