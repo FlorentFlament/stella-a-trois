@@ -39,9 +39,9 @@ fx_init SUBROUTINE
 	sta ptr + 1
 	jsr fx_text_load
 
-	lda #<robot_top_ptr
+	lda #<stella_07_top_ptr
 	sta ptr
-	lda #>robot_top_ptr
+	lda #>stella_07_top_ptr
 	sta ptr + 1
 	jsr fx_graph_top_prepare
 	ENDM
@@ -68,9 +68,9 @@ fx_init SUBROUTINE
 	jsr fx_turn
 
 	; Second GFX of 34 lines
-	lda #<robot_bottom_ptr
+	lda #<stella_07_bottom_ptr
 	sta ptr
-	lda #>robot_bottom_ptr
+	lda #>stella_07_bottom_ptr
 	sta ptr + 1
 	jsr fx_graph_top_prepare
 	ldy #34-1
@@ -101,5 +101,5 @@ text:
 	dc.b " KARMELIET  "
 
 ; data
-	INCLUDE "robot_top.asm"
-	INCLUDE "robot_bottom.asm"
+	INCLUDE "stella_07_top.asm"
+	INCLUDE "stella_07_bottom.asm"
