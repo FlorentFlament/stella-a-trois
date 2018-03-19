@@ -24,7 +24,7 @@ generated:
 	mkdir generated
 
 generated/turned_shapes: generated
-	mkdir generated/turned_shapes
+	mkdir -p generated/turned_shapes
 
 venv: venv/bin/activate
 
