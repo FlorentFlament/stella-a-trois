@@ -1,3 +1,14 @@
+; ptr should point towards the graph to display
+; This code is used to setup both top and bottom graphs.
+fx_graph_setup SUBROUTINE
+	ldy #2*7-1 ; 7 pointers
+.next
+	lda (ptr),Y
+	sta fx_buf,Y
+	dey
+	bpl .next
+	rts
+
 ; fx_buf should have pointers towards graph data
 ; fx_buf    -> COLUPF
 ; fx_buf+2  -> PF0

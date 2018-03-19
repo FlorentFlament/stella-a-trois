@@ -36,16 +36,26 @@ FX_TURN_HOUSEKEEP equ *
 	echo "FX Turn Housekeep size: ", (* - FX_TURN_HOUSEKEEP)d, "bytes"
 	ENDM
 
-; Position of the dot must be in tmp register
-	MAC m_fx_position_dot
-	; Position next plot
+; Position of the dot must be in A register
+FXPOS_ALIGNED equ *
+	ALIGN 32
+	echo "Loss due to alignment of FX Position Dot):", (* - FXPOS_ALIGNED)d, "bytes"
+fx_position_dot SUBROUTINE
+ROUGH_LOOP_START equ *
+	sta WSYNC
+	; turn off P0
+	lda #$00
+	sta GRP0
 	sleep 25
-	sec
+
 	lda tmp
+	sec
+	; Beware ! this loop must not cross a page !
 .rough_loop:
 	; The pos_star loop consumes 15 (5*3) pixels
 	sbc #$0f	      ; 2 cycles
 	bcs .rough_loop ; 3 cycles
+	echo "Rough Loop Length:", (* - ROUGH_LOOP_START)d, "bytes"
 	sta RESP0
 
 	; A register has value is in [-15 .. -1]
@@ -55,7 +65,7 @@ FX_TURN_HOUSEKEEP equ *
 	asl
 	REPEND
 	sta HMP0 ; Fine position of missile or sprite
-	ENDM
+	rts
 
 ; The dot number to compute is in tmp1
 ; Returns the position of the dot in A reg
@@ -110,17 +120,7 @@ FX_TURN_HOUSEKEEP equ *
 	sta WSYNC
 	m_fx_compute_dot
 	sta tmp
-	sta WSYNC ; Make thick plots
-
-	; turn off P0
-	lda #$00
-	sta GRP0
-	; Set Playfield
-	;ldy tmp1
-	;lda fx_turn_pf,Y
-	;sta PF1
-	; Set position for next point
-	m_fx_position_dot
+	jsr fx_position_dot
 	; Prepare to display next dot
 	sta WSYNC
 	sta HMOVE
