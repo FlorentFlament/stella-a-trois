@@ -1,5 +1,4 @@
 ; Text to display is pointed to by ptr
-; Uses tmp
 	MAC m_fx_text_load
 	ldy #11 ; Load the 11 characters to be displayed
 .next:
@@ -22,9 +21,34 @@
 	bpl .next
 	ENDM
 
+; Setup text to be displayed according to fx_text_idx
+; Uses tmp, ptr
+; txt_buf will be filled with the appropriate pointers
+	MAC m_fx_text_setup
+	lda #0
+	sta tmp ; MSB
+	lda fx_text_idx ; LSB
+	; Multiply by 16
+	REPEAT 4
+	asl
+	rol tmp
+	REPEND
+	clc
+	adc #<text
+	sta ptr
+	lda tmp
+	adc #>text
+	sta ptr + 1
+	; Then load the text from ptr
+	m_fx_text_load
+	ENDM
+
 ; Initializes txt_buf to font MSB
 	MAC m_fx_text_init
-	; TBD
+	; Trick to start the demo with the first object
+	; This may not be needed at some point
+	lda #$ff
+	sta fx_text_idx
 	ENDM
 
 ; FX Text Kernel

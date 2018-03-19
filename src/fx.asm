@@ -15,6 +15,7 @@ PART_TIMELINE equ *
 ; FX Initializtion - This is a subroutine because this file is loaded
 ; after the call to fx_init
 fx_init SUBROUTINE
+	m_fx_turn_init
 	m_fx_text_init
 	rts
 
@@ -22,9 +23,7 @@ fx_init SUBROUTINE
 	MAC m_fx_vblank
 	m_fx_timeline
 	m_fx_turn_housekeep
-
-	SET_POINTER ptr, text
-	m_fx_text_load
+	m_fx_text_setup
 
 	SET_POINTER ptr, gfx_top_ptr
 	jsr fx_graph_setup
@@ -48,7 +47,6 @@ fx_init SUBROUTINE
 	jsr fx_graph
 
 	; Turning shape FX
-	m_fx_turn_setup
 	m_fx_turn_kernel
 
 	; Second GFX of 34 lines

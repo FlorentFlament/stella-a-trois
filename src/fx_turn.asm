@@ -3,6 +3,25 @@ TURN_DISP equ 8
 TURN_FADE_OUT equ (TURN_DISP + 40)
 TURN_END equ (TURN_FADE_OUT + 8)
 
+; FX Turn initialization
+	MAC m_fx_turn_init
+	; Trick to start the demo with the first object
+	; This may not be needed at some point
+	lda #$ff
+	sta fx_turn_idx
+	ENDM
+
+; FX Turn setup
+; Loads turn object according to fx_turn_idx
+; And stores its pointer to ptr1
+	MAC m_fx_turn_get_ptr1
+	ldy fx_turn_idx
+	lda fx_turn_shapes_l,Y
+	sta ptr1
+	lda fx_turn_shapes_h,Y
+	sta ptr1 + 1
+	ENDM
+
 ; FX Turn House Keeping Macro
 	MAC m_fx_turn_housekeep
 FX_TURN_HOUSEKEEP equ *
@@ -11,28 +30,28 @@ FX_TURN_HOUSEKEEP equ *
 	; 8-31 : displayed
 	; 32-39 : fade-out
 	; 40+ : black
-	lda fx_rot_state
+	lda fx_turn_state
 	cmp #(TURN_FADE_OUT)
 	bcs .state32
 	cmp #(TURN_DISP)
 	bcs .inc_cpt
 	asl
-	sta fx_rot_color
+	sta fx_turn_color
 	jmp .inc_cpt
 .state32:
 	cmp #(TURN_END)
 	bcs .end
 	sec
 	lda #(TURN_END - 1)
-	sbc fx_rot_state
+	sbc fx_turn_state
 	asl
-	sta fx_rot_color
+	sta fx_turn_color
 .inc_cpt:
-	; Increment fx_rot_state
+	; Increment fx_turn_state
 	lda frame_cnt
 	and #$07
 	bne .end
-	inc fx_rot_state
+	inc fx_turn_state
 .end:
 	echo "FX Turn Housekeep size: ", (* - FX_TURN_HOUSEKEEP)d, "bytes"
 	ENDM
@@ -98,8 +117,8 @@ ROUGH_LOOP_START equ *
 .end:
 	ENDM
 
-; ptr1 must contain the pointer towards the 'turn shape'
 ; ptr  is used by the subroutine
+; ptr1 is used by the subroutine
 ; tmp  is used by the subroutine
 ; tmp1 is used by the subroutine
 	MAC m_fx_turn_kernel
@@ -112,9 +131,11 @@ ROUGH_LOOP_START equ *
 	sta COLUPF
 	lda #$01
 	sta CTRLPF ; mirror mode
-	lda fx_rot_color
+	lda fx_turn_color
 	sta COLUP0
 
+	; Get pointer towarts the appropriate object into ptr1
+	m_fx_turn_get_ptr1
 	lda #45 ; points
 	sta tmp1
 .next_line:
