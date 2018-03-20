@@ -51,63 +51,9 @@
 	sta fx_text_idx
 	ENDM
 
-; FX Text Kernel
-	MAC m_fx_text_kernel
-	lda #$06 ; 3 copies small (Number & Size)
-	sta NUSIZ0
-	sta NUSIZ1
-	lda #$2e
-	sta COLUP0
-	sta COLUP1
-
-	REPEAT 8
-	sta WSYNC
-	REPEND
-
-	jsr fx_text_position
-	jsr fx_text_main_loop
-
-	lda #$0
-	sta GRP0
-	sta GRP1
-	ENDM
-
-; Position the sprites
-; 12*8 = 96 pixels for the text
-; i.ie 32 pixels on each side (160 - 96)/2
-; +68 HBLANK = 100 pixels for RESP0
-FX_TEXT_POS_ALIGN equ *
-	ALIGN 8
-	echo "[FX text pos] Align loss:", (* - FX_TEXT_POS_ALIGN)d, "bytes"
-fx_text_position SUBROUTINE
-FX_TEXT_POS equ *
-	sta WSYNC
-	ldx #6  		; 2 - Approx 128 pixels / 15
-.posit	dex		; 2
-	bne .posit	; 2** (3 if branching)
-	echo "[FX text pos] Loop:", (* - FX_TEXT_POS)d, "bytes"
-	sta RESP0		; 3 34 (2 + 5*(2+3) + 4 + 3)
-	; 102 pixels - 68 = 34 ; -> 39 observerd on Stella
-	nop
-	sta RESP1
-	lda #$70		; -> now 100 pixels
-	sta HMP0
-	lda #$60
-	sta HMP1
-	sta WSYNC
-	sta HMOVE
-
- 	; Don't touch HMPx for 24 cycles
-	ldx #4
-.dont_hmp	dex
-	bpl .dont_hmp
-	rts
-
-FX_TEXT_MAIN_ALIGN equ *
-	ALIGN 128
-	echo "[FX text main] Align loss:", (* - FX_TEXT_MAIN_ALIGN)d, "bytes"
-fx_text_main_loop SUBROUTINE
-FX_TEXT_MAIN equ *
+; FX Text Main loop
+; Note that this doesn't need to be aligned
+	MAC m_fx_text_main_loop
 	;; Moving characters 8 pixels to the right
 	lda #$80
 	sta HMP0
@@ -169,7 +115,59 @@ FX_TEXT_MAIN equ *
 	tya		; 2  61
 	cmp #8		; 2  63
 	bne .txt_ln	; 4(2+2) 67
-	echo "[FX text main] Loop:", (* - FX_TEXT_MAIN)d, "bytes"
+	ENDM
+
+; FX Text Kernel
+	MAC m_fx_text_kernel
+	lda #$06 ; 3 copies small (Number & Size)
+	sta NUSIZ0
+	sta NUSIZ1
+	lda #$2e
+	sta COLUP0
+	sta COLUP1
+
+	REPEAT 0
+	sta WSYNC
+	REPEND
+
+	jsr fx_text_position
+	m_fx_text_main_loop
+
+	lda #$0
+	sta GRP0
+	sta GRP1
+	ENDM
+
+; Position the sprites
+; 12*8 = 96 pixels for the text
+; i.ie 32 pixels on each side (160 - 96)/2
+; +68 HBLANK = 100 pixels for RESP0
+; Must be aligned !
+FX_TEXT_POS_ALIGN equ *
+	ALIGN 8
+	echo "[FX text pos] Align loss:", (* - FX_TEXT_POS_ALIGN)d, "bytes"
+fx_text_position SUBROUTINE
+FX_TEXT_POS equ *
+	sta WSYNC
+	ldx #6  		; 2 - Approx 128 pixels / 15
+.posit	dex		; 2
+	bne .posit	; 2** (3 if branching)
+	echo "[FX text pos] Loop:", (* - FX_TEXT_POS)d, "bytes"
+	sta RESP0		; 3 34 (2 + 5*(2+3) + 4 + 3)
+	; 102 pixels - 68 = 34 ; -> 39 observerd on Stella
+	nop
+	sta RESP1
+	lda #$70		; -> now 100 pixels
+	sta HMP0
+	lda #$60
+	sta HMP1
+	sta WSYNC
+	sta HMOVE
+
+	; Don't touch HMPx for 24 cycles
+	ldx #4
+.dont_hmp	dex
+	bpl .dont_hmp
 	rts
 
 ; data
