@@ -107,7 +107,9 @@ FX_TEXT_HOUSEKEEP equ *
 	; This happens when writing HMOVE at the end of the scanline.
 	; L54: Display 2*8 lines
 	; This uses Y reg
-	ldy #$0
+	ldy fx_text_offset
+	cpy #8
+	beq .end
 .txt_ln:
 	sta WSYNC		; 3  78
 	sta HMOVE		; 3   3
@@ -158,6 +160,7 @@ FX_TEXT_HOUSEKEEP equ *
 	tya		; 2  61
 	cmp #8		; 2  63
 	bne .txt_ln	; 4(2+2) 67
+.end:
 	ENDM
 
 ; FX Text Kernel
@@ -169,14 +172,6 @@ FX_TEXT_HOUSEKEEP equ *
 	sta COLUP0
 	sta COLUP1
 
-	ldy fx_text_offset
-	beq .continue
-.next
-	sta WSYNC
-	dey
-	bne .next
-
-.continue
 	jsr fx_text_position
 	m_fx_text_main_loop
 
