@@ -23,6 +23,7 @@ fx_init SUBROUTINE
 	MAC m_fx_vblank
 	m_fx_timeline
 	m_fx_turn_housekeep
+	m_fx_text_housekeep
 	m_fx_text_setup
 
 	SET_POINTER ptr, gfx_top_ptr

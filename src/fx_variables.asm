@@ -16,6 +16,7 @@ fx_text_state	ds 1
 fx_text_color	ds 1
 ; Pointer towards the text to be displayed
 fx_text_idx	ds 1
+fx_text_offset	ds 1
 
 ; 12 pointers used to display the text.
 ; txt_buf is long to initialize so this is done during vblank and must

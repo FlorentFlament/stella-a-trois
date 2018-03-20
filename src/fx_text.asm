@@ -1,3 +1,46 @@
+TEXT_DISP equ 16
+TEXT_FADE_OUT equ (TEXT_DISP + 64)
+TEXT_END equ (TEXT_FADE_OUT + 16)
+
+; Some house keeping - managing the state machine
+	MAC m_fx_text_housekeep
+FX_TEXT_HOUSEKEEP equ *
+	lda fx_text_state
+	cmp #(TEXT_FADE_OUT)
+	bcs .state_fadeout
+	cmp #(TEXT_DISP)
+	bcs .inc_cpt
+	; Setup text offset
+	and #$0f
+	tay
+	lda fx_text_offset_table,Y
+	sta fx_text_offset
+	; Setup text color
+	lda fx_text_state
+	ora #$20
+	sta fx_text_color
+	jmp .inc_cpt
+.state_fadeout:
+	cmp #(TEXT_END)
+	bcs .state_end
+	sec
+	lda #(TEXT_END - 1)
+	sbc fx_text_state
+	ora #$20
+	sta fx_text_color
+.inc_cpt:
+	lda frame_cnt
+	and #$03
+	bne .end
+	inc fx_text_state
+	jmp .end
+.state_end:
+	lda #0
+	sta fx_text_color
+.end:
+	echo "[FX text housekeep] Size: ", (* - FX_TEXT_HOUSEKEEP)d, "bytes"
+	ENDM
+
 ; Text to display is pointed to by ptr
 	MAC m_fx_text_load
 	ldy #11 ; Load the 11 characters to be displayed
@@ -122,14 +165,18 @@
 	lda #$06 ; 3 copies small (Number & Size)
 	sta NUSIZ0
 	sta NUSIZ1
-	lda #$2e
+	lda fx_text_color
 	sta COLUP0
 	sta COLUP1
 
-	REPEAT 0
+	ldy fx_text_offset
+	beq .continue
+.next
 	sta WSYNC
-	REPEND
+	dey
+	bne .next
 
+.continue
 	jsr fx_text_position
 	m_fx_text_main_loop
 
@@ -171,4 +218,7 @@ FX_TEXT_POS equ *
 	rts
 
 ; data
+fx_text_offset_table:
+	dc.b 8, 7, 6, 6, 5, 4, 4, 3, 2, 2, 1, 1, 1, 0, 0, 0, 0
+
 	INCLUDE "fx_text_font.asm"
