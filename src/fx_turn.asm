@@ -56,7 +56,7 @@ FX_TURN_HOUSEKEEP equ *
 	echo "FX Turn Housekeep size: ", (* - FX_TURN_HOUSEKEEP)d, "bytes"
 	ENDM
 
-; Position of the dot must be in A register
+; Position of the dot must be in tmp register
 FXPOS_ALIGNED equ *
 	ALIGN 32
 	echo "Loss due to alignment (FX Position Dot):", (* - FXPOS_ALIGNED)d, "bytes"
