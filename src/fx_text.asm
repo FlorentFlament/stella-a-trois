@@ -60,16 +60,32 @@
 	sta COLUP0
 	sta COLUP1
 
-	; TODO Update this to have a finer an customizable position
-          ; of the text zone.
-	; L45: Position the sprites
-	; 12*8 = 96 pixels for the text
-	; i.ie 32 pixels on each side (160 - 96)/2
-	; +68 HBLANK = 100 pixels for RESP0
+	REPEAT 8
+	sta WSYNC
+	REPEND
+
+	jsr fx_text_position
+	jsr fx_text_main_loop
+
+	lda #$0
+	sta GRP0
+	sta GRP1
+	ENDM
+
+; Position the sprites
+; 12*8 = 96 pixels for the text
+; i.ie 32 pixels on each side (160 - 96)/2
+; +68 HBLANK = 100 pixels for RESP0
+FX_TEXT_POS_ALIGN equ *
+	ALIGN 8
+	echo "[FX text pos] Align loss:", (* - FX_TEXT_POS_ALIGN)d, "bytes"
+fx_text_position SUBROUTINE
+FX_TEXT_POS equ *
 	sta WSYNC
 	ldx #6  		; 2 - Approx 128 pixels / 15
 .posit	dex		; 2
 	bne .posit	; 2** (3 if branching)
+	echo "[FX text pos] Loop:", (* - FX_TEXT_POS)d, "bytes"
 	sta RESP0		; 3 34 (2 + 5*(2+3) + 4 + 3)
 	; 102 pixels - 68 = 34 ; -> 39 observerd on Stella
 	nop
@@ -85,13 +101,18 @@
 	ldx #4
 .dont_hmp	dex
 	bpl .dont_hmp
+	rts
 
+FX_TEXT_MAIN_ALIGN equ *
+	ALIGN 128
+	echo "[FX text main] Align loss:", (* - FX_TEXT_MAIN_ALIGN)d, "bytes"
+fx_text_main_loop SUBROUTINE
+FX_TEXT_MAIN equ *
 	;; Moving characters 8 pixels to the right
 	lda #$80
 	sta HMP0
 	lda #$80
 	sta HMP1
-
 	; odd lines - Shifted by 8 pix to the right -> 108
 	; Exploiting a bug to move the sprites of +8 pixels
 	; This happens when writing HMOVE at the end of the scanline.
@@ -148,11 +169,8 @@
 	tya		; 2  61
 	cmp #8		; 2  63
 	bne .txt_ln	; 4(2+2) 67
-
-	lda #$0
-	sta GRP0
-	sta GRP1
-	ENDM
+	echo "[FX text main] Loop:", (* - FX_TEXT_MAIN)d, "bytes"
+	rts
 
 ; data
 	INCLUDE "fx_text_font.asm"
