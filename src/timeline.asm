@@ -1,6 +1,7 @@
+N_INTRO equ 5
 N_BEERS equ 9
-N_GREETZ equ 25
-N_TEXTS equ (N_BEERS + N_GREETZ)
+N_GREETZ equ 26
+N_TEXTS equ (N_INTRO + N_BEERS + N_GREETZ)
 
 ; FX turn next object
 	MAC m_fx_turn_next
@@ -8,10 +9,10 @@ N_TEXTS equ (N_BEERS + N_GREETZ)
 	clc
 	lda fx_turn_idx
 	adc #1
-	cmp #(N_BEERS)
+	cmp #(N_INTRO + N_BEERS)
 	bmi .next
 	; Loop on first beer if we reached the end
-	lda #0
+	lda #(N_INTRO)
 .next:
 	sta fx_turn_idx
 	; Trigger new turn FX display
@@ -61,7 +62,7 @@ N_TEXTS equ (N_BEERS + N_GREETZ)
 	; Initial state is #$ff
 	cmp #$ff
 	beq .beers
-	cmp #(N_BEERS)
+	cmp #(N_INTRO + N_BEERS)
 	bpl .greetz
 .beers:
 	; Trigger next step every 8 time units
@@ -83,7 +84,21 @@ N_TEXTS equ (N_BEERS + N_GREETZ)
 	m_fx_text_timeline
 	ENDM
 
+empty_beer:
+	dc.b $00, $00, $00, $00, $00, $00, $00, $00
+	dc.b $00, $00, $00, $00, $00, $00, $00, $00
+	dc.b $00, $00, $00, $00, $00, $00, $00, $00
+	dc.b $00, $00, $00, $00, $00, $00, $00, $00
+	dc.b $00, $00, $00, $00, $00, $00, $00, $00
+	dc.b $00, $00, $00, $00, $00, $00
+
 fx_turn_shapes_l:
+	dc.b #<empty_beer
+	dc.b #<empty_beer
+	dc.b #<empty_beer
+	dc.b #<empty_beer
+	dc.b #<empty_beer
+
 	dc.b #<Orval_v
 	dc.b #<Kwack_v
 	dc.b #<Orval_b
@@ -95,6 +110,12 @@ fx_turn_shapes_l:
 	dc.b #<Ciney_v
 
 fx_turn_shapes_h:
+	dc.b #>empty_beer
+	dc.b #>empty_beer
+	dc.b #>empty_beer
+	dc.b #>empty_beer
+	dc.b #>empty_beer
+
 	dc.b #>Orval_v
 	dc.b #>Kwack_v
 	dc.b #>Orval_b
@@ -108,6 +129,12 @@ fx_turn_shapes_h:
 text:
 	; 12 first characters are used
 	; 4 last characters are here for alignment
+	dc.b "   FLUSH    ####"
+	dc.b "  PRESENTS  ####"
+	dc.b "AN ATARI VCS####"
+	dc.b "  _K INTRO  ####"
+	dc.b " STELLA A^  ####"
+
 	dc.b "   ORVAL    ####"
 	dc.b "   KWACK    ####"
 	dc.b "   ORVAL    ####"
@@ -117,6 +144,7 @@ text:
 	dc.b "   CHIMAY   ####"
 	dc.b "   DUVEL    ####"
 	dc.b "   CINEY    ####"
+	dc.b "  WE LOVE   ####"
 
 	dc.b "   ALTAIR   ####"
 	dc.b "  CLUSTER   ####"
@@ -124,7 +152,7 @@ text:
 	dc.b "    DMA     ####"
 	dc.b "  GENESIS   ####"
 	dc.b "  PROJECT   ####"
-	dc.b "    JAC!    ####"
+	dc.b "    JAC     ####"
 	dc.b "   NOICE    ####"
 	dc.b "  TRILOBIT  ####"
 	dc.b "   WAMMA    ####"
