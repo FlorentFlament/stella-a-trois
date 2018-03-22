@@ -26,6 +26,8 @@ ptr1	ds 2
 	SEG code
 	ORG $F000
 init	CLEAN_START		; Initializes Registers & Memory
+
+	; Initialization
 	INCLUDE "spookjaune_init.asm"
 	jsr fx_init
 	jmp main_loop
@@ -36,26 +38,26 @@ init	CLEAN_START		; Initializes Registers & Memory
 main_loop:
 	VERTICAL_SYNC		; 4 scanlines Vertical Sync signal
 
+	; ===== VBLANK =====
 	; 34 VBlank lines (76 cycles/line)
 	lda #39			; (/ (* 34.0 76) 64) = 40.375
 	sta TIM64T
-
-	; House keeping
 	INCLUDE "spookjaune_player.asm"
-	inc frame_cnt
-
 	m_fx_vblank
 	jsr wait_timint
 
+	; ===== KERNEL =====
 	; 248 Kernel lines
 	lda #19			; (/ (* 248.0 76) 1024) = 18.40
 	sta T1024T
 	m_fx_kernel		; scanline 33 - cycle 23
 	jsr wait_timint		; scanline 289 - cycle 30
 
+	; ===== OVERSCAN ======
 	; 26 Overscan lines
 	lda #22			; (/ (* 26.0 76) 64) = 30.875
 	sta TIM64T
+	inc frame_cnt
 	m_fx_overscan
 	jsr wait_timint
 
