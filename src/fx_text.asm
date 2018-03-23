@@ -109,7 +109,7 @@ FX_TEXT_HOUSEKEEP equ *
 	; This uses Y reg
 	ldy fx_text_offset
 	cpy #8
-	beq .end
+	beq .end_txt
 .txt_ln:
 	sta WSYNC		; 3  78
 	sta HMOVE		; 3   3
@@ -160,7 +160,7 @@ FX_TEXT_HOUSEKEEP equ *
 	tya		; 2  61
 	cmp #8		; 2  63
 	bne .txt_ln	; 4(2+2) 67
-.end:
+.end_txt:
 	ENDM
 
 ; FX Text Kernel
@@ -175,9 +175,21 @@ FX_TEXT_HOUSEKEEP equ *
 	jsr fx_text_position
 	m_fx_text_main_loop
 
+	; Synchronizing to have the same number of lines whatever the past
+	sta WSYNC
 	lda #$0
 	sta GRP0
 	sta GRP1
+
+	; Skip lines to keep the layout if we have an offset
+	ldy fx_text_offset
+.skip_loop:
+	dey
+	bmi .end_skip
+	sta WSYNC
+	sta WSYNC
+	jmp .skip_loop
+.end_skip:
 	ENDM
 
 ; Position the sprites

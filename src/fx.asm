@@ -50,13 +50,14 @@ fx_init SUBROUTINE
 	; Turning shape FX
 	m_fx_turn_kernel
 
+	; Text
+	m_fx_text_kernel
+
 	; Second GFX of 34 lines
 	SET_POINTER ptr, gfx_bottom_ptr
 	jsr fx_graph_setup
 	ldy #34-1
 	jsr fx_graph
-
-	m_fx_text_kernel
 	ENDM
 
 ; data
