@@ -1,4 +1,4 @@
-N_INTRO equ 5
+N_INTRO equ 9
 N_BEERS equ 9
 N_GREETZ equ 26
 N_TEXTS equ (N_INTRO + N_BEERS + N_GREETZ)
@@ -98,6 +98,10 @@ fx_turn_shapes_l:
 	dc.b #<empty_beer
 	dc.b #<empty_beer
 	dc.b #<empty_beer
+	dc.b #<empty_beer
+	dc.b #<empty_beer
+	dc.b #<empty_beer
+	dc.b #<empty_beer
 
 	dc.b #<Orval_v
 	dc.b #<Kwack_v
@@ -110,6 +114,10 @@ fx_turn_shapes_l:
 	dc.b #<Ciney_v
 
 fx_turn_shapes_h:
+	dc.b #>empty_beer
+	dc.b #>empty_beer
+	dc.b #>empty_beer
+	dc.b #>empty_beer
 	dc.b #>empty_beer
 	dc.b #>empty_beer
 	dc.b #>empty_beer
@@ -134,6 +142,10 @@ text:
 	dc.b "AN ATARI VCS####"
 	dc.b "  _K INTRO  ####"
 	dc.b " STELLA A^  ####"
+	dc.b "MSX GLAFOUK ####"
+	dc.b "FONT GLAFOUK####"
+	dc.b " GFX EXOCET ####"
+	dc.b " CODE FLEW  ####"
 
 	dc.b "   ORVAL    ####"
 	dc.b "   KWACK    ####"
