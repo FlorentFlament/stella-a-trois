@@ -7,12 +7,15 @@ N_CREDITS equ 4
 P_CREDITS equ 2 ; mask is #$01 - CT 28
 
 N_BEERS equ 9
-P_BEERS equ 4 ; mask is #$03 - CT 64
+P_BEERS equ 2 ; mask is #$03 - CT 64
 
-N_GREETZ equ 26
+N_GREETZ equ 27
 P_GREETZ equ 1 ; mask is #$00 - CT 90
 
-N_TEXTS equ (N_INTRO + N_CREDITS + N_BEERS + N_GREETZ)
+N_ENDING equ 4
+P_ENDING equ 4
+
+N_TEXTS equ (N_INTRO + N_CREDITS + N_BEERS + N_GREETZ + N_ENDING)
 
 ; FX turn next object
 	MAC m_fx_turn_next
@@ -134,17 +137,23 @@ t_greetz_setup:
 	lda #(P_GREETZ - 1)
 	sta fx_text_period_mask
 	rts
+t_ending_setup:
+	lda #(P_ENDING - 1)
+	sta fx_text_period_mask
+	rts
 
 T_INTRO equ N_INTRO * P_INTRO
 T_CREDITS equ T_INTRO + (N_CREDITS * P_CREDITS)
 T_BEERS equ T_CREDITS + (N_BEERS * P_BEERS)
 T_GREETZ equ T_BEERS + (N_GREETZ * P_GREETZ)
+T_ENDING equ T_GREETZ + (N_ENDING * P_ENDING)
 ; timeline in 64 frames time units
 t_timeline:
 	dc.b T_INTRO
 	dc.b T_CREDITS
 	dc.b T_BEERS
 	dc.b T_GREETZ
+	dc.b T_ENDING
 	dc.b 255 ; END
 
 ; Pointers to part dependent setup functions
@@ -153,6 +162,7 @@ t_setup_l:
 	dc.b #<(t_credits_setup  - 1)
 	dc.b #<(t_beers_setup - 1)
 	dc.b #<(t_greetz_setup - 1)
+	dc.b #<(t_ending_setup - 1)
 	dc.b #<(t_intro_setup - 1)
 
 t_setup_h
@@ -160,7 +170,8 @@ t_setup_h
 	dc.b #>(t_credits_setup  - 1)
 	dc.b #>(t_beers_setup - 1)
 	dc.b #>(t_greetz_setup - 1)
-	dc.b #<(t_intro_setup - 1)
+	dc.b #>(t_ending_setup - 1)
+	dc.b #>(t_intro_setup - 1)
 
 fx_turn_shapes_l:
 	dc.b #<Orval_v
@@ -217,6 +228,7 @@ text:
 	dc.b "   ALTAIR   ####"
 	dc.b "  CLUSTER   ####"
 	dc.b "   COINE    ####"
+	dc.b " DENTIFRICE ####"
 	dc.b "    DMA     ####"
 	dc.b "  GENESIS   ####"
 	dc.b "  PROJECT   ####"
@@ -237,5 +249,11 @@ text:
 	dc.b "    TRBL    ####"
 	dc.b "   UNDEAD   ####"
 	dc.b "  SCENERS   ####"
+	dc.b "  UP ROUGH  ####"
 	dc.b "   X MEN    ####"
+
+	; End Texts
 	dc.b "AND YOU ALL ####"
+	dc.b "PILS IS NICE####"
+	dc.b "SPECIALS ARE####"
+	dc.b " REAL BEERS ####"

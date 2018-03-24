@@ -227,5 +227,3 @@ FX_TEXT_POS equ *
 ; data
 fx_text_offset_table:
 	dc.b 8, 7, 6, 6, 5, 4, 4, 3, 2, 2, 1, 1, 1, 0, 0, 0, 0
-
-	INCLUDE "fx_text_font.asm"

@@ -59,7 +59,7 @@ FX_TURN_HOUSEKEEP equ *
 ; Position of the dot must be in tmp register
 FXPOS_ALIGNED equ *
 	ALIGN 32
-	echo "Loss due to alignment (FX Position Dot):", (* - FXPOS_ALIGNED)d, "bytes"
+	echo "[FX position dot] Align loss:", (* - FXPOS_ALIGNED)d, "bytes"
 fx_position_dot SUBROUTINE
 ROUGH_LOOP_START equ *
 	sta WSYNC
@@ -75,7 +75,7 @@ ROUGH_LOOP_START equ *
 	; The pos_star loop consumes 15 (5*3) pixels
 	sbc #$0f	      ; 2 cycles
 	bcs .rough_loop ; 3 cycles
-	echo "Rough Loop Length:", (* - ROUGH_LOOP_START)d, "bytes"
+	echo "[FX position dot] Loop:", (* - ROUGH_LOOP_START)d, "bytes"
 	sta RESP0
 
 	; A register has value is in [-15 .. -1]

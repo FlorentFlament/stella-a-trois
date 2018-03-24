@@ -25,6 +25,10 @@ ptr1	ds 2
 
 	SEG code
 	ORG $F000
+; by loading font table to have it aligned without loosing space
+	INCLUDE "fx_text_font.asm"
+
+; Then the remaining of the code
 init	CLEAN_START		; Initializes Registers & Memory
 
 	; Initialization

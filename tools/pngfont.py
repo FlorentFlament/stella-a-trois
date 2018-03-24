@@ -20,7 +20,7 @@ def parse_font_file(fname):
 def print_header():
     print("""PART_FX_TEXT_ALIGNED equ *
 	ALIGN 256
-	echo "Loss due to alignment (FX Text):", (* - PART_FX_TEXT_ALIGNED)d, "bytes"
+	echo "[FX text font] Align loss:", (* - PART_FX_TEXT_ALIGNED)d, "bytes"
     """)
     print("fx_text_font:")
 
