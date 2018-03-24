@@ -48,11 +48,7 @@ fx_init SUBROUTINE
 	sta WSYNC ; consume out of screen line
 	jsr fx_graph
 
-	; Turning shape FX
-	m_fx_turn_kernel
-
-	; Text
-	m_fx_text_kernel
+	jsr fx_kernel_layout
 
 	; Second GFX of 34 lines
 	SET_POINTER ptr, gfx_bottom_ptr
@@ -60,6 +56,40 @@ fx_init SUBROUTINE
 	ldy #34-1
 	jsr fx_graph
 	ENDM
+
+fx_kernel_layout SUBROUTINE
+	lda fx_layout_ptr + 1
+	pha
+	lda fx_layout_ptr
+	pha
+	rts
+
+; Helper to do a tiny loop
+; Y contains the number of lines to skip - 1
+	MAC m_fx_tiny_loop
+.loop
+	sta WSYNC
+	dey
+	bne .loop
+	ENDM
+
+fx_kernel_intro SUBROUTINE
+	; Empirically found skip values
+	ldy #71
+	m_fx_tiny_loop
+
+	jsr fx_text_kernel
+
+	ldy #70
+	m_fx_tiny_loop
+	rts
+
+fx_kernel_demo SUBROUTINE
+	; Turning shape FX
+	m_fx_turn_kernel
+	; Text
+	jsr fx_text_kernel
+	rts
 
 ; data
 	INCLUDE "gfx_top.asm"

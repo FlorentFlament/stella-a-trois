@@ -4,6 +4,8 @@ time	ds 1
 
 ; Current part being running
 fx_part	ds 1
+; Current layout to draw
+fx_layout_ptr	ds 2
 
 ; FX turn state machine
 ; From 0 to 8

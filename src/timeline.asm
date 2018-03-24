@@ -104,8 +104,8 @@ N_TEXTS equ (N_INTRO + N_CREDITS + N_BEERS + N_GREETZ + N_ENDING)
 
 ; Initialize FX wrapping loop
 	MAC m_fx_wrap_init
-	lda #$00
-	sta fx_part
+	; fx_part has been initialized to #$00 - everything is fine
+	SET_POINTER fx_layout_ptr, (fx_kernel_intro-1)
 	jsr fx_part_setup
 	ENDM
 
@@ -118,7 +118,6 @@ fx_part_setup:
 	lda t_setup_l,Y
 	pha
 	rts ; call setup function
-	rts ; returns
 
 ; Setup of different parts
 t_intro_setup:
@@ -132,6 +131,7 @@ t_credits_setup:
 t_beers_setup:
 	lda #(P_BEERS - 1)
 	sta fx_text_period_mask
+	SET_POINTER fx_layout_ptr, (fx_kernel_demo-1)
 	rts
 t_greetz_setup:
 	lda #(P_GREETZ - 1)

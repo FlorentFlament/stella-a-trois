@@ -164,7 +164,8 @@ FX_TEXT_HOUSEKEEP equ *
 	ENDM
 
 ; FX Text Kernel
-	MAC m_fx_text_kernel
+; This will be used twice (2 different kernels)
+fx_text_kernel SUBROUTINE
 	lda #$06 ; 3 copies small (Number & Size)
 	sta NUSIZ0
 	sta NUSIZ1
@@ -190,7 +191,7 @@ FX_TEXT_HOUSEKEEP equ *
 	sta WSYNC
 	jmp .skip_loop
 .end_skip:
-	ENDM
+	rts
 
 ; Position the sprites
 ; 12*8 = 96 pixels for the text
