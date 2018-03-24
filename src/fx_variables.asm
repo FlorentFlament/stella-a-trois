@@ -2,6 +2,9 @@
 ; time is incremeneted every 64 frames
 time	ds 1
 
+; Current part being running
+fx_part	ds 1
+
 ; FX turn state machine
 ; From 0 to 8
 fx_turn_state	ds 1
@@ -10,13 +13,19 @@ fx_turn_color	ds 1
 ; Pointer towards the next shape to be displayed
 fx_turn_idx	ds 1
 
+; Variables required for a single text display
 ; FX text state machine
 fx_text_state	ds 1
 ; Color of text
 fx_text_color	ds 1
 ; Pointer towards the text to be displayed
 fx_text_idx	ds 1
+; Offset used to have the text appear by moving down
 fx_text_offset	ds 1
+
+; Mask used to determine the period of the text display FX
+fx_text_period_mask	ds 1
+
 
 ; 12 pointers used to display the text.
 ; txt_buf is long to initialize so this is done during vblank and must

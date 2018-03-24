@@ -94,9 +94,9 @@ FX_TEXT_HOUSEKEEP equ *
 	sta fx_text_idx
 	ENDM
 
-; FX Text Main loop
+; FX Text Main Kernel part
 ; Note that this doesn't need to be aligned
-	MAC m_fx_text_main_loop
+	MAC m_fx_text_kernel_main
 	;; Moving characters 8 pixels to the right
 	lda #$80
 	sta HMP0
@@ -173,7 +173,7 @@ FX_TEXT_HOUSEKEEP equ *
 	sta COLUP1
 
 	jsr fx_text_position
-	m_fx_text_main_loop
+	m_fx_text_kernel_main
 
 	; Synchronizing to have the same number of lines whatever the past
 	sta WSYNC

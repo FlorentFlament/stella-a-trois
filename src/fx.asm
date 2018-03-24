@@ -17,11 +17,12 @@ PART_TIMELINE equ *
 fx_init SUBROUTINE
 	m_fx_turn_init
 	m_fx_text_init
+	m_fx_wrap_init
 	rts
 
 ; FX VBlank code
 	MAC m_fx_vblank
-	m_fx_timeline
+	m_fx_wrap_loop
 	m_fx_turn_housekeep
 	m_fx_text_housekeep
 	m_fx_text_setup
