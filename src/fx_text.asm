@@ -68,18 +68,38 @@ FX_TEXT_HOUSEKEEP equ *
 ; Uses tmp, ptr
 ; txt_buf will be filled with the appropriate pointers
 	MAC m_fx_text_setup
+	; Multiply by 12 fx_text_idx
+	; *4 first
 	lda #0
 	sta tmp ; MSB
 	lda fx_text_idx ; LSB
-	; Multiply by 16
-	REPEAT 4
+	REPEAT 2
 	asl
 	rol tmp
 	REPEND
-	clc
-	adc #<text
 	sta ptr
 	lda tmp
+	sta ptr + 1
+
+	; *8 then
+	lda ptr ; LSB
+	asl
+	rol tmp ; MSB
+
+	; *12 - Add ptr to A and tmp
+	clc
+	adc ptr
+	sta ptr
+	lda tmp
+	adc ptr + 1
+	sta ptr + 1
+
+	; + text
+	; No possible carry by multiplying x in [0..255] by 12
+	lda ptr
+	adc #<text
+	sta ptr
+	lda ptr + 1
 	adc #>text
 	sta ptr + 1
 	; Then load the text from ptr
