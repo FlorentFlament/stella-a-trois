@@ -7,6 +7,7 @@ TURN_END equ (TURN_FADE_OUT + 8)
 	MAC m_fx_turn_init
 	; Trick to start the demo with the first object
 	; This may not be needed at some point
+
 	lda #$ff
 	sta fx_turn_idx
 	ENDM
@@ -56,27 +57,21 @@ FX_TURN_HOUSEKEEP equ *
 	echo "FX Turn Housekeep size: ", (* - FX_TURN_HOUSEKEEP)d, "bytes"
 	ENDM
 
-; Position of the dot must be in tmp register
-FXPOS_ALIGNED equ *
-	ALIGN 32
-	echo "[FX position dot] Align loss:", (* - FXPOS_ALIGNED)d, "bytes"
-fx_position_dot SUBROUTINE
-ROUGH_LOOP_START equ *
-	sta WSYNC
-	; turn off P0
-	lda #$00
-	sta GRP0
+; Position of the dot must be in Y register
+; Argument is the sprite to use (0 or 1)
+	MAC m_fx_position_dot
 	sleep 25
 
-	lda tmp
+	tya
 	sec
 	; Beware ! this loop must not cross a page !
+	echo "[FX position dot Loop]", ({1})d, "start :", *
 .rough_loop:
 	; The pos_star loop consumes 15 (5*3) pixels
 	sbc #$0f	      ; 2 cycles
 	bcs .rough_loop ; 3 cycles
-	echo "[FX position dot] Loop:", (* - ROUGH_LOOP_START)d, "bytes"
-	sta RESP0
+	echo "[FX position dot Loop]", ({1})d, "end :", *
+	sta RESP{1}
 
 	; A register has value is in [-15 .. -1]
 	adc #$07 ; A in [-8 .. 6]
@@ -84,16 +79,16 @@ ROUGH_LOOP_START equ *
 	REPEAT 4
 	asl
 	REPEND
-	sta HMP0 ; Fine position of missile or sprite
-	rts
+	sta HMP{1} ; Fine position of missile or sprite
+	ENDM
 
-; The dot number to compute is in tmp1
+; The dot number to compute is in X
 ; Returns the position of the dot in A reg
 ; This macro uses Y reg
 	MAC m_fx_compute_dot
-	ldy tmp1
+	txa
+	tay
 	lda (ptr1),Y
-	beq .end ; Keep 0 in A if no point
 
 	; Fetch corresponding disc
 	tay
@@ -104,11 +99,10 @@ ROUGH_LOOP_START equ *
 
 	; Fetch angle and add rotation
 	clc
-	lda tmp1
+	txa
 	and #$07
 	tay
 	lda fx_turn_angle,Y
-	asl
 	adc frame_cnt
 	lsr
 	and #$1f
@@ -119,11 +113,10 @@ ROUGH_LOOP_START equ *
 
 ; ptr  is used by the subroutine
 ; ptr1 is used by the subroutine
-; tmp  is used by the subroutine
-; tmp1 is used by the subroutine
 	MAC m_fx_turn_kernel
 	lda #$00 ; one copy small p0 (Number & Size)
 	sta NUSIZ0
+	sta NUSIZ1
 	sta PF0
 	sta PF1
 	sta PF2
@@ -133,32 +126,60 @@ ROUGH_LOOP_START equ *
 	sta CTRLPF ; mirror mode
 	lda fx_turn_color
 	sta COLUP0
+	sta COLUP1
 
-	; Get pointer towarts the appropriate object into ptr1
+	; Get pointer towards the appropriate object into ptr1
 	m_fx_turn_get_ptr1
-	lda #45 ; points
-	sta tmp1
+	ldx #63 ; load both A and X with 45 points
 .next_line:
-	sta WSYNC
+	; Compute next dot positions
 	m_fx_compute_dot
-	sta tmp
-	jsr fx_position_dot
-	; Prepare to display next dot
-	sta WSYNC
-	sta HMOVE
+	tay
 
-	; Turn on P0 if we have a dot to display
-	lda tmp
-	beq .no_dot
+	sta WSYNC
+	; Don't move sprite 1 anymore
+	lda #$00
+	sta HMP1
+	; Position sprite 0
+	m_fx_position_dot 0
+	; Turn on sprite 0
 	lda #$01
 	sta GRP0
-.no_dot:
-	; Loop until last line has been drawn
-	dec tmp1
-	bpl .next_line
-
-	lda #0
+	; Commit P0 position
 	sta WSYNC
+	sta HMOVE
+	; Turn off sprite 1
+	lda #$00
+	sta GRP1
+
+	; Compute next dot positions
+	dex
+	m_fx_compute_dot
+	tay
+
+	sta WSYNC
+	; Don't move sprit 0
+	lda #$00
+	sta HMP0
+	; Position sprite 1
+	m_fx_position_dot 1
+	; Turn on sprite 1
+	lda #$01
+	sta GRP1
+	; Commit position
+	sta WSYNC
+	sta HMOVE
+	; Turn off sprite 0
+	lda #$00
+	sta GRP0
+
+	; Loop until last line has been drawn
+	dex
+	bmi .end
+	jmp .next_line
+
+.end:
+	lda #0
 	sta WSYNC
 	sta COLUPF
 	sta COLUP0
@@ -166,8 +187,7 @@ ROUGH_LOOP_START equ *
 	ENDM
 
 fx_turn_angle:
-	dc.b $00, $08, $10, $18, $04, $0c, $14, $1c
+	dc.b $00, $10, $20, $30, $08, $18, $28, $38
 
 ; Data
-	INCLUDE "fx_turn_data.asm"
 	INCLUDE "fx_turn_tables.asm"
