@@ -50,6 +50,8 @@ fx_init SUBROUTINE
 
 	jsr fx_kernel_layout
 
+	sta WSYNC
+	sta WSYNC
 	; Second GFX of 34 lines
 	SET_POINTER ptr, gfx_bottom_ptr
 	jsr fx_graph_setup
@@ -87,6 +89,9 @@ fx_kernel_intro SUBROUTINE
 fx_kernel_demo SUBROUTINE
 	; Turning shape FX
 	m_fx_turn_kernel
+	REPEAT 3
+	sta WSYNC
+	REPEND
 	; Text
 	jsr fx_text_kernel
 	rts

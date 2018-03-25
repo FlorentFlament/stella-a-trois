@@ -60,7 +60,7 @@ FX_TURN_HOUSEKEEP equ *
 ; Position of the dot must be in Y register
 ; Argument is the sprite to use (0 or 1)
 	MAC m_fx_position_dot
-	sleep 25
+	sleep 26
 
 	tya
 	sec
@@ -111,6 +111,8 @@ FX_TURN_HOUSEKEEP equ *
 .end:
 	ENDM
 
+
+
 ; ptr  is used by the subroutine
 ; ptr1 is used by the subroutine
 	MAC m_fx_turn_kernel
@@ -130,7 +132,16 @@ FX_TURN_HOUSEKEEP equ *
 
 	; Get pointer towards the appropriate object into ptr1
 	m_fx_turn_get_ptr1
-	ldx #63 ; load both A and X with 45 points
+	ldy #64
+.empty_loop:
+	dey
+	lda (ptr1),Y
+	sta WSYNC
+	sta WSYNC
+	beq .empty_loop
+
+	tya
+	tax
 .next_line:
 	; Compute next dot positions
 	m_fx_compute_dot
@@ -181,9 +192,12 @@ FX_TURN_HOUSEKEEP equ *
 .end:
 	lda #0
 	sta WSYNC
+	sta WSYNC
 	sta COLUPF
 	sta COLUP0
+	sta COLUP1
 	sta GRP0
+	sta GRP1
 	ENDM
 
 fx_turn_angle:
