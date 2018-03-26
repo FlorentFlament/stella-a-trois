@@ -1,5 +1,5 @@
 TEXT_DISP equ 16
-TEXT_FADE_OUT equ (TEXT_DISP + 24)
+TEXT_FADE_OUT equ (TEXT_DISP + 64)
 TEXT_END equ (TEXT_FADE_OUT + 16)
 
 ; Some house keeping - managing the state machine

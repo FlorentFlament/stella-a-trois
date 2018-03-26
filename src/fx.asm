@@ -38,6 +38,7 @@ fx_init SUBROUTINE
 	and #$3f
 	bne .continue
 	inc time
+	inc part_time
 .continue:
 	ENDM
 

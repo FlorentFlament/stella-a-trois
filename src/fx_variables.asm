@@ -1,6 +1,9 @@
 ; Time referencial - used by FX main loop to orchestrate the parts
 ; time is incremeneted every 64 frames
 time	ds 1
+; Part specific time. Is incremented by time but allows part to start
+; at any moment.
+part_time	ds 1
 
 ; Current part being running
 fx_part	ds 1

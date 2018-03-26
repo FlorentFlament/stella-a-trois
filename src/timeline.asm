@@ -6,16 +6,19 @@ P_INTRO equ 4 ; mask is #$03 - Cumulated time is 20
 N_CREDITS equ 4
 P_CREDITS equ 2 ; mask is #$01 - CT 28
 
-N_BEERS equ 9
+N_BEERS equ 8
 P_BEERS equ 8 ; mask is #$03 - CT 64
 
-N_GREETZ equ 27
+N_TRANS equ 1
+P_TRANS equ 4
+
+N_GREETZ equ 28
 P_GREETZ equ 1 ; mask is #$00 - CT 90
 
-N_ENDING equ 4
+N_ENDING equ 3
 P_ENDING equ 4
 
-N_TEXTS equ (N_INTRO + N_CREDITS + N_BEERS + N_GREETZ + N_ENDING)
+N_TEXTS equ (N_INTRO + N_CREDITS + N_BEERS + N_TRANS + N_GREETZ + N_ENDING)
 
 ; FX turn next object
 	MAC m_fx_turn_next
@@ -58,7 +61,7 @@ N_TEXTS equ (N_INTRO + N_CREDITS + N_BEERS + N_GREETZ + N_ENDING)
 
 ; FX turn timeline
 	MAC m_fx_turn_wrap_loop
-	lda time
+	lda part_time
 	and #$07
 	bne .end
 	; Trigger next step every 8 time units
@@ -71,7 +74,7 @@ N_TEXTS equ (N_INTRO + N_CREDITS + N_BEERS + N_GREETZ + N_ENDING)
 
 ; FX text Wrapping Loop
 	MAC m_fx_text_wrap_loop
-	lda time
+	lda part_time
 	; The fx_text_period_mask determines when to switch to the next FX
 	; For instance:
 	; If the value is $00, we switch every '64 frames time unit'
@@ -99,6 +102,7 @@ N_TEXTS equ (N_INTRO + N_CREDITS + N_BEERS + N_GREETZ + N_ENDING)
 	bne .continue
 	inc fx_part
 	jsr fx_part_setup
+	; reinitialize part dedicated time counter
 .continue:
 	ENDM
 
@@ -134,27 +138,38 @@ t_beers_setup:
 	lda #(P_BEERS - 1)
 	sta fx_text_period_mask
 	lda #0
+	sta part_time
 	sta fx_turn_idx
+	sta fx_turn_state
+	rts
+t_trans_setup:
+	lda #(P_TRANS - 1)
+	sta fx_text_period_mask
 	rts
 t_greetz_setup:
 	lda #(P_GREETZ - 1)
 	sta fx_text_period_mask
 	rts
 t_ending_setup:
+	SET_POINTER fx_layout_ptr, (fx_kernel_intro-1)
 	lda #(P_ENDING - 1)
 	sta fx_text_period_mask
+	lda #0
+	sta part_time
 	rts
 
 T_INTRO equ N_INTRO * P_INTRO
 T_CREDITS equ T_INTRO + (N_CREDITS * P_CREDITS)
 T_BEERS equ T_CREDITS + (N_BEERS * P_BEERS)
-T_GREETZ equ T_BEERS + (N_GREETZ * P_GREETZ)
+T_TRANS equ T_BEERS + (N_TRANS * P_TRANS)
+T_GREETZ equ T_TRANS + (N_GREETZ * P_GREETZ)
 T_ENDING equ T_GREETZ + (N_ENDING * P_ENDING)
 ; timeline in 64 frames time units
 t_timeline:
 	dc.b T_INTRO
 	dc.b T_CREDITS
 	dc.b T_BEERS
+	dc.b T_TRANS
 	dc.b T_GREETZ
 	dc.b T_ENDING
 	dc.b 0 ; END
@@ -164,6 +179,7 @@ t_setup_l:
 	dc.b #<(t_intro_setup - 1)
 	dc.b #<(t_credits_setup  - 1)
 	dc.b #<(t_beers_setup - 1)
+	dc.b #<(t_trans_setup - 1)
 	dc.b #<(t_greetz_setup - 1)
 	dc.b #<(t_ending_setup - 1)
 	dc.b #<(t_ending_setup - 1)
@@ -172,6 +188,7 @@ t_setup_h
 	dc.b #>(t_intro_setup - 1)
 	dc.b #>(t_credits_setup  - 1)
 	dc.b #>(t_beers_setup - 1)
+	dc.b #>(t_trans_setup - 1)
 	dc.b #>(t_greetz_setup - 1)
 	dc.b #>(t_ending_setup - 1)
 	dc.b #>(t_ending_setup - 1)
@@ -184,7 +201,6 @@ fx_turn_shapes_l:
 	dc.b #<Ciney_v
 	dc.b #<Duvel_v
 	dc.b #<Kwack_v
-	dc.b #<Orval_v
 	dc.b #<Westmalle_v
 
 fx_turn_shapes_h:
@@ -195,7 +211,6 @@ fx_turn_shapes_h:
 	dc.b #>Ciney_v
 	dc.b #>Duvel_v
 	dc.b #>Kwack_v
-	dc.b #>Orval_v
 	dc.b #>Westmalle_v
 
 text:
@@ -211,9 +226,9 @@ text:
 
 	; Credits
 	dc.b "MSX GLAFOUK "
-	dc.b "FONT GLAFOUK"
 	dc.b " GFX EXOCET "
 	dc.b " CODE FLEW  "
+	dc.b "            "
 
 	; Beers
 	dc.b "   DUVEL    "
@@ -221,13 +236,14 @@ text:
 	dc.b "WESTVLETEREN"
 	dc.b "   CHIMAY   "
 	dc.b "   CINEY    "
-	dc.b "    DUVEL   "
+	dc.b "   CHOUFFE  "
 	dc.b "   KWACK    "
-	dc.b "    DUVEL   "
 	dc.b " WESTMALLE  "
 
-	; Greetz
+	; Trans
 	dc.b "   WE LOVE  "
+
+	; Greetz
 	dc.b "   ALTAIR   "
 	dc.b "  CLUSTER   "
 	dc.b "    COINE   "
@@ -254,9 +270,10 @@ text:
 	dc.b "  SCENERS   "
 	dc.b "  UP ROUGH  "
 	dc.b "    X MEN   "
+	dc.b "            "
+	dc.b "            "
 
 	; End Texts
-	dc.b "AND YOU ALL "
-	dc.b "PILS IS NICE"
-	dc.b "SPECIALS ARE"
-	dc.b " REAL BEERS "
+	dc.b "AND WE LOVE "
+	dc.b "   YOU ALL  "
+	dc.b "  CHEERS !  "
