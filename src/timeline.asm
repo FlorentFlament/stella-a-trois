@@ -221,8 +221,8 @@ text:
 	dc.b "   FLUSH    "
 	dc.b "  PRESENTS  "
 	dc.b "AN ATARI VCS"
-	dc.b "  _K INTRO  "
-	dc.b " STELLA A^  "
+	dc.b "  \K INTRO  "
+	dc.b " STELLA A[  "
 
 	; Credits
 	dc.b "MSX GLAFOUK "
@@ -276,4 +276,4 @@ text:
 	; End Texts
 	dc.b "AND WE LOVE "
 	dc.b "   YOU ALL  "
-	dc.b "  CHEERS !  "
+	dc.b "  CHEERS ]  "
