@@ -7,9 +7,6 @@ TURN_END equ (TURN_FADE_OUT + 8)
 	MAC m_fx_turn_init
 	; Trick to start the demo with the first object
 	; This may not be needed at some point
-
-	lda #$ff
-	sta fx_turn_idx
 	ENDM
 
 ; FX Turn setup
@@ -165,6 +162,7 @@ FX_TURN_HOUSEKEEP equ *
 
 	; Compute next dot positions
 	dex
+	bmi .end
 	m_fx_compute_dot
 	tay
 

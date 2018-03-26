@@ -7,7 +7,7 @@ N_CREDITS equ 4
 P_CREDITS equ 2 ; mask is #$01 - CT 28
 
 N_BEERS equ 9
-P_BEERS equ 2 ; mask is #$03 - CT 64
+P_BEERS equ 8 ; mask is #$03 - CT 64
 
 N_GREETZ equ 27
 P_GREETZ equ 1 ; mask is #$00 - CT 90
@@ -121,7 +121,7 @@ fx_part_setup:
 ; Setup of different parts
 t_intro_setup:
 	; TODO change this back to fx_kernel_intro once debugged
-	SET_POINTER fx_layout_ptr, (fx_kernel_demo-1)
+	SET_POINTER fx_layout_ptr, (fx_kernel_intro-1)
 	lda #(P_INTRO - 1)
 	sta fx_text_period_mask
 	rts
@@ -133,6 +133,8 @@ t_beers_setup:
 	SET_POINTER fx_layout_ptr, (fx_kernel_demo-1)
 	lda #(P_BEERS - 1)
 	sta fx_text_period_mask
+	lda #0
+	sta fx_turn_idx
 	rts
 t_greetz_setup:
 	lda #(P_GREETZ - 1)
@@ -155,7 +157,7 @@ t_timeline:
 	dc.b T_BEERS
 	dc.b T_GREETZ
 	dc.b T_ENDING
-	dc.b 255 ; END
+	dc.b 0 ; END
 
 ; Pointers to part dependent setup functions
 t_setup_l:
@@ -164,7 +166,7 @@ t_setup_l:
 	dc.b #<(t_beers_setup - 1)
 	dc.b #<(t_greetz_setup - 1)
 	dc.b #<(t_ending_setup - 1)
-	dc.b #<(t_intro_setup - 1)
+	dc.b #<(t_ending_setup - 1)
 
 t_setup_h
 	dc.b #>(t_intro_setup - 1)
@@ -172,29 +174,29 @@ t_setup_h
 	dc.b #>(t_beers_setup - 1)
 	dc.b #>(t_greetz_setup - 1)
 	dc.b #>(t_ending_setup - 1)
-	dc.b #>(t_intro_setup - 1)
+	dc.b #>(t_ending_setup - 1)
 
 fx_turn_shapes_l:
-	dc.b #<Orval_v
-	dc.b #<Kwack_v
-	dc.b #<Orval_b
 	dc.b #<Duvel_b
+	dc.b #<Orval_b
 	dc.b #<Westvleteren_b
-	dc.b #<Westmalle_v
 	dc.b #<Chimay_v
-	dc.b #<Duvel_v
 	dc.b #<Ciney_v
+	dc.b #<Duvel_v
+	dc.b #<Kwack_v
+	dc.b #<Orval_v
+	dc.b #<Westmalle_v
 
 fx_turn_shapes_h:
-	dc.b #>Orval_v
-	dc.b #>Kwack_v
-	dc.b #>Orval_b
 	dc.b #>Duvel_b
+	dc.b #>Orval_b
 	dc.b #>Westvleteren_b
-	dc.b #>Westmalle_v
 	dc.b #>Chimay_v
-	dc.b #>Duvel_v
 	dc.b #>Ciney_v
+	dc.b #>Duvel_v
+	dc.b #>Kwack_v
+	dc.b #>Orval_v
+	dc.b #>Westmalle_v
 
 text:
 	; 12 first characters are used
@@ -214,44 +216,44 @@ text:
 	dc.b " CODE FLEW  "
 
 	; Beers
-	dc.b "            "
-	dc.b "   KWACK    "
-	dc.b "   ORVAL    "
 	dc.b "   DUVEL    "
+	dc.b "    ORVAL   "
 	dc.b "WESTVLETEREN"
-	dc.b " WESTMALLE  "
 	dc.b "   CHIMAY   "
-	dc.b "   DUVEL    "
 	dc.b "   CINEY    "
+	dc.b "    DUVEL   "
+	dc.b "   KWACK    "
+	dc.b "    DUVEL   "
+	dc.b " WESTMALLE  "
 
 	; Greetz
-	dc.b "  WE LOVE   "
+	dc.b "   WE LOVE  "
 	dc.b "   ALTAIR   "
 	dc.b "  CLUSTER   "
-	dc.b "   COINE    "
+	dc.b "    COINE   "
 	dc.b " DENTIFRICE "
 	dc.b "    DMA     "
-	dc.b "  GENESIS   "
+	dc.b "   GENESIS  "
 	dc.b "  PROJECT   "
-	dc.b "    JAC     "
+	dc.b "     JAC    "
 	dc.b "   NOICE    "
 	dc.b "  TRILOBIT  "
 	dc.b "   WAMMA    "
-	dc.b "   XAYAX    "
+	dc.b "    XAYAX   "
 	dc.b "   BLABLA   "
 	dc.b "  HOODLUM   "
-	dc.b "   PONK     "
+	dc.b "    PONK    "
 	dc.b " RESISTANCE "
 	dc.b "    RSI     "
 	dc.b " SECTOR ONE "
-	dc.b "   SWYNG    "
+	dc.b "    SWYNG   "
 	dc.b "    TMP     "
-	dc.b "  TRAKTOR   "
+	dc.b "   TRAKTOR  "
 	dc.b "    TRBL    "
 	dc.b "   UNDEAD   "
 	dc.b "  SCENERS   "
 	dc.b "  UP ROUGH  "
-	dc.b "   X MEN    "
+	dc.b "    X MEN   "
 
 	; End Texts
 	dc.b "AND YOU ALL "

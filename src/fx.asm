@@ -77,12 +77,12 @@ fx_kernel_layout SUBROUTINE
 
 fx_kernel_intro SUBROUTINE
 	; Empirically found skip values
-	ldy #71
+	ldy #68
 	m_fx_tiny_loop
 
 	jsr fx_text_kernel
 
-	ldy #70
+	ldy #68
 	m_fx_tiny_loop
 	rts
 
