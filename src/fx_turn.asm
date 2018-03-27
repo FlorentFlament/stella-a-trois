@@ -200,6 +200,3 @@ FX_TURN_HOUSEKEEP equ *
 
 fx_turn_angle:
 	dc.b $00, $10, $20, $30, $08, $18, $28, $38
-
-; Data
-	INCLUDE "fx_turn_tables.asm"

@@ -28,6 +28,7 @@ ptr1	ds 2
 ; Loading a couple of data to have it aligned without loosing space
 	INCLUDE "fx_text_font.asm"
 	INCLUDE "fx_turn_data.asm"
+	INCLudE "fx_turn_tables.asm"
 
 ; Then the remaining of the code
 init	CLEAN_START		; Initializes Registers & Memory

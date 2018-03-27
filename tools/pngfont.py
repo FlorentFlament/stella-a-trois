@@ -6,7 +6,7 @@ from PIL import Image
 from asmlib import lst2asm
 from imglib import *
 
-CHARACTERS = "abcdefghijklmnopqrstuvwxyz34X"
+CHARACTERS = "abcdefghijklmnopqrstuvwxyz34X01"
 
 def parse_font_file(fname):
     im = Image.open(fname).convert('1')
