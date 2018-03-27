@@ -52,11 +52,11 @@ generated/fx_text_font.asm: venv
 
 generated/gfx_top.asm: venv
 	$(MDGEN)
-	$(VENV) python tools/png2hrpf.py fx_pics/stella_07_top_40x50.png gfx_top > $@
+	$(VENV) python tools/png2hrpf.py fx_pics/stella_09b_top_40x50.png gfx_top > $@
 
 generated/gfx_bottom.asm: venv
 	$(MDGEN)
-	$(VENV) python tools/png2hrpf.py fx_pics/stella_07_bottom_40x34.png gfx_bottom > $@
+	$(VENV) python tools/png2hrpf.py fx_pics/stella_09b_bottom_40x34.png gfx_bottom > $@
 
 run: main.bin
 	stella $<

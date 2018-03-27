@@ -36,6 +36,14 @@
                 },
                 {
                     "gototarget": -1,
+                    "patternindex": 1
+                },
+                {
+                    "gototarget": -1,
+                    "patternindex": 5
+                },
+                {
+                    "gototarget": -1,
                     "patternindex": 10
                 },
                 {
@@ -47,13 +55,45 @@
                     "patternindex": 10
                 },
                 {
-                    "gototarget": 0,
+                    "gototarget": 2,
                     "patternindex": 11
                 }
             ]
         },
         {
             "sequence": [
+                {
+                    "gototarget": -1,
+                    "patternindex": 12
+                },
+                {
+                    "gototarget": -1,
+                    "patternindex": 12
+                },
+                {
+                    "gototarget": -1,
+                    "patternindex": 12
+                },
+                {
+                    "gototarget": -1,
+                    "patternindex": 12
+                },
+                {
+                    "gototarget": -1,
+                    "patternindex": 12
+                },
+                {
+                    "gototarget": -1,
+                    "patternindex": 12
+                },
+                {
+                    "gototarget": -1,
+                    "patternindex": 12
+                },
+                {
+                    "gototarget": -1,
+                    "patternindex": 12
+                },
                 {
                     "gototarget": -1,
                     "patternindex": 0
@@ -147,7 +187,7 @@
                     "patternindex": 3
                 },
                 {
-                    "gototarget": 0,
+                    "gototarget": 8,
                     "patternindex": 7
                 }
             ]
@@ -1457,6 +1497,53 @@
                 }
             ],
             "oddspeed": 3
+        },
+        {
+            "evenspeed": 8,
+            "name": "Empty",
+            "notes": [
+                {
+                    "number": 0,
+                    "type": 0,
+                    "value": 0
+                },
+                {
+                    "number": 0,
+                    "type": 0,
+                    "value": 0
+                },
+                {
+                    "number": 0,
+                    "type": 0,
+                    "value": 0
+                },
+                {
+                    "number": 0,
+                    "type": 0,
+                    "value": 0
+                },
+                {
+                    "number": 0,
+                    "type": 0,
+                    "value": 0
+                },
+                {
+                    "number": 0,
+                    "type": 0,
+                    "value": 0
+                },
+                {
+                    "number": 0,
+                    "type": 0,
+                    "value": 0
+                },
+                {
+                    "number": 0,
+                    "type": 0,
+                    "value": 0
+                }
+            ],
+            "oddspeed": 8
         }
     ],
     "percussion": [
