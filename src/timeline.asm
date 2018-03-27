@@ -278,4 +278,4 @@ text:
 	dc.b "   YOU ALL  "
 	dc.b "  CHEERS ]  "
 	dc.b "  PROSIT ]  "
-	dc.b "  SANTE ]   "
+	dc.b "   SANTE ]  "
