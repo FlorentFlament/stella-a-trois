@@ -1,22 +1,22 @@
 ; N stands for number of items for this part
 ; P stands for period (in time units) for this part - This must be a power of 2
 N_INTRO equ 5
-P_INTRO equ 4 ; mask is #$03 - Cumulated time is 20
+P_INTRO equ 2
 
 N_CREDITS equ 4
-P_CREDITS equ 2 ; mask is #$01 - CT 28
+P_CREDITS equ 1
 
 N_BEERS equ 8
-P_BEERS equ 8 ; mask is #$03 - CT 64
+P_BEERS equ 4
 
 N_TRANS equ 1
-P_TRANS equ 4
+P_TRANS equ 2
 
-N_GREETZ equ 28
-P_GREETZ equ 1 ; mask is #$00 - CT 90
+N_GREETZ equ 26
+P_GREETZ equ 1
 
 N_ENDING equ 5
-P_ENDING equ 4
+P_ENDING equ 2
 
 N_TEXTS equ (N_INTRO + N_CREDITS + N_BEERS + N_TRANS + N_GREETZ + N_ENDING)
 
@@ -62,7 +62,7 @@ N_TEXTS equ (N_INTRO + N_CREDITS + N_BEERS + N_TRANS + N_GREETZ + N_ENDING)
 ; FX turn timeline
 	MAC m_fx_turn_wrap_loop
 	lda part_time
-	and #$07
+	and #$03
 	bne .end
 	; Trigger next step every 8 time units
 	lda frame_cnt
@@ -270,8 +270,6 @@ text:
 	dc.b "  SCENERS   "
 	dc.b "  UP ROUGH  "
 	dc.b "    X MEN   "
-	dc.b "            "
-	dc.b "            "
 
 	; End Texts
 	dc.b "AND WE LOVE "

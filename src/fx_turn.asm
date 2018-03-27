@@ -1,6 +1,6 @@
 ; Frame per frame house keeping
 TURN_DISP equ 8
-TURN_FADE_OUT equ (TURN_DISP + 40)
+TURN_FADE_OUT equ (TURN_DISP + 16)
 TURN_END equ (TURN_FADE_OUT + 8)
 
 ; FX Turn initialization
