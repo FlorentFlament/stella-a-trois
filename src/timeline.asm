@@ -15,7 +15,7 @@ P_TRANS equ 4
 N_GREETZ equ 28
 P_GREETZ equ 1 ; mask is #$00 - CT 90
 
-N_ENDING equ 3
+N_ENDING equ 5
 P_ENDING equ 4
 
 N_TEXTS equ (N_INTRO + N_CREDITS + N_BEERS + N_TRANS + N_GREETZ + N_ENDING)
@@ -277,3 +277,5 @@ text:
 	dc.b "AND WE LOVE "
 	dc.b "   YOU ALL  "
 	dc.b "  CHEERS ]  "
+	dc.b "  PROSIT ]  "
+	dc.b "  SANTE ]   "
