@@ -194,22 +194,22 @@ t_setup_h
 	dc.b #>(t_ending_setup - 1)
 
 fx_turn_shapes_l:
-	dc.b #<Duvel_b
-	dc.b #<Orval_b
-	dc.b #<Westvleteren_b
 	dc.b #<Chimay_v
+	dc.b #<Duvel_b
 	dc.b #<Ciney_v
+	dc.b #<Orval_b
 	dc.b #<Duvel_v
+	dc.b #<Westvleteren_b
 	dc.b #<Kwack_v
 	dc.b #<Westmalle_v
 
 fx_turn_shapes_h:
-	dc.b #>Duvel_b
-	dc.b #>Orval_b
-	dc.b #>Westvleteren_b
 	dc.b #>Chimay_v
+	dc.b #>Duvel_b
 	dc.b #>Ciney_v
+	dc.b #>Orval_b
 	dc.b #>Duvel_v
+	dc.b #>Westvleteren_b
 	dc.b #>Kwack_v
 	dc.b #>Westmalle_v
 
@@ -231,12 +231,12 @@ text:
 	dc.b "            "
 
 	; Beers
-	dc.b "   DUVEL    "
-	dc.b "    ORVAL   "
-	dc.b "WESTVLETEREN"
 	dc.b "   CHIMAY   "
+	dc.b "   DUVEL    "
 	dc.b "   CINEY    "
+	dc.b "    ORVAL   "
 	dc.b "   CHOUFFE  "
+	dc.b "WESTVLETEREN"
 	dc.b "   KWACK    "
 	dc.b " WESTMALLE  "
 
@@ -276,4 +276,4 @@ text:
 	dc.b "   YOU ALL  "
 	dc.b "  CHEERS ]  "
 	dc.b "  PROSIT ]  "
-	dc.b "   SANTE ]  "
+	dc.b " ET SANTE ] "
