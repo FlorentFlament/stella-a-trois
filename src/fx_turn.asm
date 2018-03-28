@@ -116,13 +116,7 @@ FX_TURN_HOUSEKEEP equ *
 	lda #$00 ; one copy small p0 (Number & Size)
 	sta NUSIZ0
 	sta NUSIZ1
-	sta PF0
-	sta PF1
-	sta PF2
-	lda #$28
-	sta COLUPF
 	lda #$01
-	sta CTRLPF ; mirror mode
 	lda fx_turn_color
 	sta COLUP0
 	sta COLUP1
@@ -191,7 +185,6 @@ FX_TURN_HOUSEKEEP equ *
 	lda #0
 	sta WSYNC
 	sta WSYNC
-	sta COLUPF
 	sta COLUP0
 	sta COLUP1
 	sta GRP0

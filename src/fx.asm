@@ -18,6 +18,10 @@ fx_init SUBROUTINE
 	m_fx_turn_init
 	m_fx_text_init
 	m_fx_wrap_init
+
+	; mirror mode
+	lda #$01
+	sta CTRLPF
 	rts
 
 ; FX VBlank code
@@ -49,6 +53,14 @@ fx_init SUBROUTINE
 	sta WSYNC ; consume out of screen line
 	jsr fx_graph
 
+	lda #$00
+	sta PF0
+	sta PF2
+	lda #$40
+	sta PF1
+	lda #$02
+	sta COLUPF
+
 	jsr fx_kernel_layout
 
 	sta WSYNC
@@ -58,6 +70,9 @@ fx_init SUBROUTINE
 	jsr fx_graph_setup
 	ldy #34-1
 	jsr fx_graph
+
+	lda #$00
+	sta COLUPF
 	ENDM
 
 fx_kernel_layout SUBROUTINE
