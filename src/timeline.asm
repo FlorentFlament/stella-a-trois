@@ -3,8 +3,8 @@
 N_INTRO equ 5
 P_INTRO equ 2
 
-N_CREDITS equ 4
-P_CREDITS equ 1
+N_CREDITS equ 3
+P_CREDITS equ 2
 
 N_BEERS equ 8
 P_BEERS equ 4
@@ -228,7 +228,6 @@ text:
 	dc.b "MSX GLAFOUK "
 	dc.b " GFX EXOCET "
 	dc.b " CODE FLEW  "
-	dc.b "            "
 
 	; Beers
 	dc.b "   CHIMAY   "
