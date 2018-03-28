@@ -53,6 +53,9 @@ class HiResPF:
     def get_all_pfs(self):
         return (self.get_pf(n) for n in range(6))
 
+    def get_half_pfs(self):
+        return (self.get_pf(n) for n in range(3))
+
     # Arbitrarily replace None with color 0
     # This shouldn't be an issue since the color is unused
     def get_all_cols(self):
@@ -67,13 +70,13 @@ def main():
     sname = argv[2] # symbol name
 
     hrpf = HiResPF(Image.open(fname))
-    for i,pf in enumerate(hrpf.get_all_pfs()):
+    for i,pf in enumerate(hrpf.get_half_pfs()):
         print_block(pf, "{}_pf{}".format(sname, i))
     print_block(hrpf.get_all_cols(), "{}_cols".format(sname))
 
     print("{}_ptr:".format(sname))
     print("\tdc.w {}_cols".format(sname))
-    for i in range(6):
+    for i in range(3):
         print("\tdc.w {}_pf{}".format(sname, i))
 
 main()
