@@ -64,15 +64,16 @@ FX_TEXT_HOUSEKEEP equ *
 	bpl .next
 	ENDM
 
-; Setup text to be displayed according to fx_text_idx
+; Setup text to be displayed
+; X must contain the text index to fetch
 ; Uses tmp, ptr
 ; txt_buf will be filled with the appropriate pointers
-	MAC m_fx_text_setup
+fx_text_setup:
 	; Multiply by 12 fx_text_idx
 	; *4 first
 	lda #0
 	sta tmp ; MSB
-	lda fx_text_idx ; LSB
+	txa ; LSB
 	REPEAT 2
 	asl
 	rol tmp
@@ -104,7 +105,7 @@ FX_TEXT_HOUSEKEEP equ *
 	sta ptr + 1
 	; Then load the text from ptr
 	m_fx_text_load
-	ENDM
+	rts
 
 ; Initializes txt_buf to font MSB
 	MAC m_fx_text_init

@@ -29,7 +29,8 @@ fx_init SUBROUTINE
 	m_fx_wrap_loop
 	m_fx_turn_housekeep
 	m_fx_text_housekeep
-	m_fx_text_setup
+	ldx fx_text_idx
+	jsr fx_text_setup
 
 	SET_POINTER ptr, gfx_top_ptr
 	jsr fx_graph_setup
@@ -99,6 +100,23 @@ fx_kernel_intro SUBROUTINE
 	jsr fx_text_kernel
 
 	ldy #68
+	m_fx_tiny_loop
+	rts
+
+fx_kernel_title SUBROUTINE
+	; Empirically found skip values
+	ldy #53
+	m_fx_tiny_loop
+
+	ldx fx_text_idx
+	jsr fx_text_setup
+	jsr fx_text_kernel
+	ldx fx_text_idx
+	inx
+	jsr fx_text_setup
+	jsr fx_text_kernel
+
+	ldy #52
 	m_fx_tiny_loop
 	rts
 

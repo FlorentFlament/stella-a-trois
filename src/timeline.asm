@@ -1,7 +1,10 @@
 ; N stands for number of items for this part
 ; P stands for period (in time units) for this part - This must be a power of 2
-N_INTRO equ 5
+N_INTRO equ 4
 P_INTRO equ 2
+
+N_TITLE equ 1
+P_TITLE equ 2
 
 N_CREDITS equ 3
 P_CREDITS equ 2
@@ -18,7 +21,7 @@ P_GREETZ equ 1
 N_ENDING equ 5
 P_ENDING equ 2
 
-N_TEXTS equ (N_INTRO + N_CREDITS + N_BEERS + N_TRANS + N_GREETZ + N_ENDING)
+N_TEXTS equ (N_INTRO + N_TITLE+1 + N_CREDITS + N_BEERS + N_TRANS + N_GREETZ + N_ENDING)
 
 ; FX turn next object
 	MAC m_fx_turn_next
@@ -124,12 +127,18 @@ fx_part_setup:
 
 ; Setup of different parts
 t_intro_setup:
-	; TODO change this back to fx_kernel_intro once debugged
 	SET_POINTER fx_layout_ptr, (fx_kernel_intro-1)
 	lda #(P_INTRO - 1)
 	sta fx_text_period_mask
 	rts
+t_title_setup:
+	SET_POINTER fx_layout_ptr, (fx_kernel_title-1)
+	lda #(P_TITLE - 1)
+	sta fx_text_period_mask
+	rts
 t_credits_setup:
+	SET_POINTER fx_layout_ptr, (fx_kernel_intro-1)
+	inc fx_text_idx
 	lda #(P_CREDITS - 1)
 	sta fx_text_period_mask
 	rts
@@ -159,7 +168,8 @@ t_ending_setup:
 	rts
 
 T_INTRO equ N_INTRO * P_INTRO
-T_CREDITS equ T_INTRO + (N_CREDITS * P_CREDITS)
+T_TITLE equ T_INTRO + (N_TITLE * P_TITLE)
+T_CREDITS equ T_TITLE + (N_CREDITS * P_CREDITS)
 T_BEERS equ T_CREDITS + (N_BEERS * P_BEERS)
 T_TRANS equ T_BEERS + (N_TRANS * P_TRANS)
 T_GREETZ equ T_TRANS + (N_GREETZ * P_GREETZ)
@@ -167,6 +177,7 @@ T_ENDING equ T_GREETZ + (N_ENDING * P_ENDING)
 ; timeline in 64 frames time units
 t_timeline:
 	dc.b T_INTRO
+	dc.b T_TITLE
 	dc.b T_CREDITS
 	dc.b T_BEERS
 	dc.b T_TRANS
@@ -177,6 +188,7 @@ t_timeline:
 ; Pointers to part dependent setup functions
 t_setup_l:
 	dc.b #<(t_intro_setup - 1)
+	dc.b #<(t_title_setup - 1)
 	dc.b #<(t_credits_setup  - 1)
 	dc.b #<(t_beers_setup - 1)
 	dc.b #<(t_trans_setup - 1)
@@ -186,6 +198,7 @@ t_setup_l:
 
 t_setup_h
 	dc.b #>(t_intro_setup - 1)
+	dc.b #>(t_title_setup - 1)
 	dc.b #>(t_credits_setup  - 1)
 	dc.b #>(t_beers_setup - 1)
 	dc.b #>(t_trans_setup - 1)
@@ -222,7 +235,10 @@ text:
 	dc.b "  PRESENTS  "
 	dc.b "AN ATARI VCS"
 	dc.b "  \K INTRO  "
-	dc.b " STELLA A[  "
+
+	; Title
+	dc.b "   STELLA   "
+	dc.b "   A TROIS  "
 
 	; Credits
 	dc.b "MSX GLAFOUK "
