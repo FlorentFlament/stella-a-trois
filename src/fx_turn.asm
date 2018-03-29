@@ -9,7 +9,6 @@ TURN_END equ (TURN_FADE_OUT + 8)
 	; This may not be needed at some point
 	ENDM
 
-; FX Turn setup
 ; Loads turn object according to fx_turn_idx
 ; And stores its pointer to ptr1
 	MAC m_fx_turn_get_ptr1
@@ -18,6 +17,24 @@ TURN_END equ (TURN_FADE_OUT + 8)
 	sta ptr1
 	lda fx_turn_shapes_h,Y
 	sta ptr1 + 1
+	ENDM
+
+; Update the fx_turn_palette_ptr to point to the appropriate palette
+	MAC m_fx_turn_update_palette
+	lda fx_turn_idx
+	and #$01
+	bne .palette_b
+	lda #<fx_turn_palette_a
+	sta fx_turn_palette_ptr
+	lda #>fx_turn_palette_a
+	sta fx_turn_palette_ptr + 1
+	jmp .end
+.palette_b:
+	lda #<fx_turn_palette_b
+	sta fx_turn_palette_ptr
+	lda #>fx_turn_palette_b
+	sta fx_turn_palette_ptr + 1
+.end:
 	ENDM
 
 ; FX Turn House Keeping Macro
@@ -34,7 +51,7 @@ FX_TURN_HOUSEKEEP equ *
 	cmp #(TURN_DISP)
 	bcs .inc_cpt
 	asl
-	sta fx_turn_color
+	sta fx_turn_brightness
 	jmp .inc_cpt
 .state32:
 	cmp #(TURN_END)
@@ -43,7 +60,7 @@ FX_TURN_HOUSEKEEP equ *
 	lda #(TURN_END - 1)
 	sbc fx_turn_state
 	asl
-	sta fx_turn_color
+	sta fx_turn_brightness
 .inc_cpt:
 	; Increment fx_turn_state
 	lda frame_cnt
@@ -51,15 +68,23 @@ FX_TURN_HOUSEKEEP equ *
 	bne .end
 	inc fx_turn_state
 .end:
+	m_fx_turn_update_palette
 	echo "FX Turn Housekeep size: ", (* - FX_TURN_HOUSEKEEP)d, "bytes"
 	ENDM
 
-; Position of the dot must be in Y register
+; Line number must be in register X
+; Position of the dot must be in register tmp
 ; Argument is the sprite to use (0 or 1)
 	MAC m_fx_position_dot
-	sleep 26
+	txa
+	tay
+	lda (fx_turn_palette_ptr),Y
+	ora fx_turn_brightness
+	sta COLUP0
+	sta COLUP1
+	sleep 7
 
-	tya
+	lda tmp
 	sec
 	; Beware ! this loop must not cross a page !
 	echo "[FX position dot Loop]", ({1})d, "start :", *
@@ -112,14 +137,12 @@ FX_TURN_HOUSEKEEP equ *
 
 ; ptr  is used by the subroutine
 ; ptr1 is used by the subroutine
+; tmp is used
 	MAC m_fx_turn_kernel
 	lda #$00 ; one copy small p0 (Number & Size)
 	sta NUSIZ0
 	sta NUSIZ1
 	lda #$01
-	lda fx_turn_color
-	sta COLUP0
-	sta COLUP1
 
 	; Get pointer towards the appropriate object into ptr1
 	m_fx_turn_get_ptr1
@@ -136,7 +159,7 @@ FX_TURN_HOUSEKEEP equ *
 .next_line:
 	; Compute next dot positions
 	m_fx_compute_dot
-	tay
+	sta tmp
 
 	sta WSYNC
 	; Don't move sprite 1 anymore
@@ -158,7 +181,7 @@ FX_TURN_HOUSEKEEP equ *
 	dex
 	bmi .end
 	m_fx_compute_dot
-	tay
+	sta tmp
 
 	sta WSYNC
 	; Don't move sprit 0

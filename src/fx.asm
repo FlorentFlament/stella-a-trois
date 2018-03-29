@@ -135,6 +135,7 @@ fx_kernel_title SUBROUTINE
 
 fx_kernel_demo SUBROUTINE
 	jsr fx_kernel_graph_top
+	sta WSYNC
 
 	; Turning shape FX
 	m_fx_turn_kernel
