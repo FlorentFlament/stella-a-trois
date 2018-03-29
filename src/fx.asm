@@ -52,8 +52,16 @@ fx_init SUBROUTINE
 	; First GFX is 50 lines
 	ldy #50-1
 	sta WSYNC ; consume out of screen line
-	jsr fx_graph
 
+	jsr fx_kernel_layout
+
+	lda #$00
+	sta COLUPF
+	ENDM
+
+fx_kernel_graph_top SUBROUTINE
+	jsr fx_graph
+	; Setup FX borders
 	lda #$00
 	sta PF0
 	sta PF2
@@ -61,9 +69,9 @@ fx_init SUBROUTINE
 	sta PF1
 	lda #$02
 	sta COLUPF
+	rts
 
-	jsr fx_kernel_layout
-
+fx_kernel_graph_bottom SUBROUTINE
 	sta WSYNC
 	sta WSYNC
 	; Second GFX of 34 lines
@@ -71,10 +79,7 @@ fx_init SUBROUTINE
 	jsr fx_graph_setup
 	ldy #34-1
 	jsr fx_graph
-
-	lda #$00
-	sta COLUPF
-	ENDM
+	rts
 
 fx_kernel_layout SUBROUTINE
 	lda fx_layout_ptr + 1
@@ -93,6 +98,8 @@ fx_kernel_layout SUBROUTINE
 	ENDM
 
 fx_kernel_intro SUBROUTINE
+	jsr fx_kernel_graph_top
+
 	; Empirically found skip values
 	ldy #68
 	m_fx_tiny_loop
@@ -101,9 +108,13 @@ fx_kernel_intro SUBROUTINE
 
 	ldy #68
 	m_fx_tiny_loop
+
+	jsr fx_kernel_graph_bottom
 	rts
 
 fx_kernel_title SUBROUTINE
+	jsr fx_kernel_graph_top
+
 	; Empirically found skip values
 	ldy #53
 	m_fx_tiny_loop
@@ -118,9 +129,13 @@ fx_kernel_title SUBROUTINE
 
 	ldy #52
 	m_fx_tiny_loop
+
+	jsr fx_kernel_graph_bottom
 	rts
 
 fx_kernel_demo SUBROUTINE
+	jsr fx_kernel_graph_top
+
 	; Turning shape FX
 	m_fx_turn_kernel
 	REPEAT 3
@@ -128,6 +143,11 @@ fx_kernel_demo SUBROUTINE
 	REPEND
 	; Text
 	jsr fx_text_kernel
+
+	jsr fx_kernel_graph_bottom
+	rts
+
+fx_kernel_blank SUBROUTINE
 	rts
 
 ; data
