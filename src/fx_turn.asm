@@ -30,9 +30,10 @@ TURN_END equ (TURN_FADE_OUT + 8)
 	sta fx_turn_palette_ptr + 1
 	jmp .end
 .palette_b:
-	lda #<fx_turn_palette_b
+	;lda #<fx_turn_palette_b
+	lda #<fx_turn_palette_a
 	sta fx_turn_palette_ptr
-	lda #>fx_turn_palette_b
+	lda #>fx_turn_palette_a
 	sta fx_turn_palette_ptr + 1
 .end:
 	ENDM

@@ -9,11 +9,14 @@ P_TITLE equ 2
 N_CREDITS equ 3
 P_CREDITS equ 2
 
+N_TRANSITION equ 1
+P_TRANSITION equ 1
+
 N_BEERS equ 8
 P_BEERS equ 4
 
-N_TRANS equ 1
-P_TRANS equ 2
+N_WELOVE equ 1
+P_WELOVE equ 2
 
 N_GREETZ equ 26
 P_GREETZ equ 1
@@ -24,7 +27,7 @@ P_ENDING equ 2
 N_LATEST equ 1
 P_LATEST equ 4
 
-N_TEXTS equ (N_INTRO + N_TITLE+1 + N_CREDITS + N_BEERS + N_TRANS + N_GREETZ + N_ENDING + N_LATEST)
+N_TEXTS equ (N_INTRO + N_TITLE+1 + N_CREDITS + N_BEERS + N_WELOVE + N_GREETZ + N_ENDING + N_LATEST)
 
 ; FX turn next object
 	MAC m_fx_turn_next
@@ -145,6 +148,12 @@ t_credits_setup:
 	lda #(P_CREDITS - 1)
 	sta fx_text_period_mask
 	rts
+t_transition_setup:
+	SET_POINTER fx_layout_ptr, (fx_kernel_transition-1)
+	dec fx_text_idx
+	lda #(P_TRANSITION - 1)
+	sta fx_text_period_mask
+	rts
 t_beers_setup:
 	SET_POINTER fx_layout_ptr, (fx_kernel_demo-1)
 	lda #(P_BEERS - 1)
@@ -154,8 +163,8 @@ t_beers_setup:
 	sta fx_turn_idx
 	sta fx_turn_state
 	rts
-t_trans_setup:
-	lda #(P_TRANS - 1)
+t_welove_setup:
+	lda #(P_WELOVE - 1)
 	sta fx_text_period_mask
 	rts
 t_greetz_setup:
@@ -180,9 +189,10 @@ t_blank_setup:
 T_INTRO equ N_INTRO * P_INTRO
 T_TITLE equ T_INTRO + (N_TITLE * P_TITLE)
 T_CREDITS equ T_TITLE + (N_CREDITS * P_CREDITS)
-T_BEERS equ T_CREDITS + (N_BEERS * P_BEERS)
-T_TRANS equ T_BEERS + (N_TRANS * P_TRANS)
-T_GREETZ equ T_TRANS + (N_GREETZ * P_GREETZ)
+T_TRANS_1 equ T_CREDITS + (N_TRANSITION * P_TRANSITION)
+T_BEERS equ T_TRANS_1 + (N_BEERS * P_BEERS)
+T_WELOVE equ T_BEERS + (N_WELOVE * P_WELOVE)
+T_GREETZ equ T_WELOVE + (N_GREETZ * P_GREETZ)
 T_ENDING equ T_GREETZ + (N_ENDING * P_ENDING)
 T_LATEST equ T_ENDING + (N_LATEST * P_LATEST)
 ; timeline in 64 frames time units
@@ -190,8 +200,9 @@ t_timeline:
 	dc.b T_INTRO
 	dc.b T_TITLE
 	dc.b T_CREDITS
+	dc.b T_TRANS_1
 	dc.b T_BEERS
-	dc.b T_TRANS
+	dc.b T_WELOVE
 	dc.b T_GREETZ
 	dc.b T_ENDING
 	dc.b T_LATEST
@@ -202,8 +213,9 @@ t_setup_l:
 	dc.b #<(t_intro_setup - 1)
 	dc.b #<(t_title_setup - 1)
 	dc.b #<(t_credits_setup  - 1)
+	dc.b #<(t_transition_setup - 1)
 	dc.b #<(t_beers_setup - 1)
-	dc.b #<(t_trans_setup - 1)
+	dc.b #<(t_welove_setup - 1)
 	dc.b #<(t_greetz_setup - 1)
 	dc.b #<(t_ending_setup - 1)
 	dc.b #<(t_latest_setup - 1)
@@ -213,8 +225,9 @@ t_setup_h
 	dc.b #>(t_intro_setup - 1)
 	dc.b #>(t_title_setup - 1)
 	dc.b #>(t_credits_setup  - 1)
+	dc.b #>(t_transition_setup - 1)
 	dc.b #>(t_beers_setup - 1)
-	dc.b #>(t_trans_setup - 1)
+	dc.b #>(t_welove_setup - 1)
 	dc.b #>(t_greetz_setup - 1)
 	dc.b #>(t_ending_setup - 1)
 	dc.b #>(t_latest_setup - 1)
@@ -269,7 +282,7 @@ text:
 	dc.b "   KWACK    "
 	dc.b " WESTMALLE  "
 
-	; Trans
+	; Welove
 	dc.b "   WE LOVE  "
 
 	; Greetz

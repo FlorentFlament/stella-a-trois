@@ -148,9 +148,54 @@ fx_kernel_demo SUBROUTINE
 	jsr fx_kernel_graph_bottom
 	rts
 
+fx_kernel_transition SUBROUTINE
+	lda frame_cnt
+	and #$3f
+	cmp #$20
+	bmi .continue
+	lda #0
+
+.continue
+	and #$0f
+	tay
+	lda transition_table,Y
+	sta tmp
+
+	tay
+	beq .upper_end
+.upper_loop:
+	sta WSYNC
+	dey
+	bne .upper_loop
+.upper_end:
+	jsr fx_kernel_graph_top
+
+	; Max 155 lines between the 2 graphs
+	asl tmp
+	sec
+	lda #155
+	sbc tmp
+	tay
+	beq .bottom_end
+.bottom_loop:
+	sta WSYNC
+	dey
+	bne .bottom_loop
+.bottom_end:
+	jsr fx_kernel_graph_bottom
+
+	; Total picture size: 50 + 155 + 34 = 239 lines
+	rts
+
 fx_kernel_blank SUBROUTINE
 	rts
 
 ; data
+
+; [int(round(77-abs(math.cos(x/16 * math.pi))*77)) for x in range(16)]
+transition_table:
+	dc.b $00, $01, $06, $0d, $17, $22, $30, $3e
+	dc.b $4d, $3e, $30, $22, $17, $0d, $06, $01
+
 	INCLUDE "gfx_top.asm"
 	INCLUDE "gfx_bottom.asm"
