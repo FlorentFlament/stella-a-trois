@@ -50,7 +50,6 @@ fx_init SUBROUTINE
 ; FX Kernel code
 	MAC m_fx_kernel
 	; First GFX is 50 lines
-	ldy #50-1
 	sta WSYNC ; consume out of screen line
 
 	jsr fx_kernel_layout
@@ -60,6 +59,7 @@ fx_init SUBROUTINE
 	ENDM
 
 fx_kernel_graph_top SUBROUTINE
+	ldy #50-1
 	jsr fx_graph
 	; Setup FX borders
 	lda #$00
