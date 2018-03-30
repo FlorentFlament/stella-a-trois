@@ -4,10 +4,10 @@ N_INTRO equ 4
 P_INTRO equ 2
 
 N_TITLE equ 1
-P_TITLE equ 2
+P_TITLE equ 4
 
 N_CREDITS equ 3
-P_CREDITS equ 2
+P_CREDITS equ 1
 
 N_TRANSITION equ 1
 P_TRANSITION equ 1
@@ -18,7 +18,7 @@ P_BEERS equ 4
 N_WELOVE equ 1
 P_WELOVE equ 2
 
-N_GREETZ equ 26
+N_GREETZ equ 27
 P_GREETZ equ 1
 
 N_ENDING equ 4
@@ -325,6 +325,7 @@ text:
 	dc.b "  SCENERS   "
 	dc.b "  UP ROUGH  "
 	dc.b "    X MEN   "
+	dc.b "BEETRO CREW "
 
 	; End Texts
 	dc.b "AND WE LOVE "
