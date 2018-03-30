@@ -188,6 +188,15 @@ fx_kernel_transition SUBROUTINE
 	rts
 
 fx_kernel_blank SUBROUTINE
+	; Fade-out volume
+	lda snd_shift
+	cmp #4
+	beq .continue
+	lda frame_cnt
+	and #$3f
+	bne .continue
+	inc snd_shift
+.continue:
 	rts
 
 ; data

@@ -28,8 +28,33 @@ ptr1	ds 2
 ; Loading a couple of data to have it aligned without loosing space
 	INCLUDE "fx_text_font.asm"
 	INCLUDE "fx_turn_data.asm"
+	INCLUDE "fx_turn_tables.asm"
 	INCLUDE "fx_turn_palettes.asm"
-	INCLudE "fx_turn_tables.asm"
+
+; Sound fadeoff macro
+	MAC m_sound_fadeoff
+	; Clean snd_vol registers
+	lda snd_vol
+	and #$0f
+	sta snd_vol
+	lda snd_vol+1
+	and #$0f
+	sta snd_vol+1
+
+	; Shift sound volume according to snd_shift
+	ldx snd_shift
+	beq .dont_shift_volume
+.loop_shift_volume:
+	lsr snd_vol
+	lsr snd_vol+1
+	dex
+	bne .loop_shift_volume
+.dont_shift_volume:
+	lda snd_vol
+	sta AUDV0
+	lda snd_vol+1
+	sta AUDV1
+	ENDM
 
 ; Then the remaining of the code
 init	CLEAN_START		; Initializes Registers & Memory
@@ -42,7 +67,7 @@ init	CLEAN_START		; Initializes Registers & Memory
 	; Import FX macros and subroutines
 	INCLUDE "fx.asm"
 
-main_loop:
+main_loop SUBROUTINE
 	VERTICAL_SYNC		; 4 scanlines Vertical Sync signal
 
 	; ===== VBLANK =====
@@ -50,10 +75,7 @@ main_loop:
 	lda #39			; (/ (* 34.0 76) 64) = 40.375
 	sta TIM64T
 	INCLUDE "spookjaune_player.asm"
-	lda snd_vol
-	sta AUDV0
-	lda snd_vol+1
-	sta AUDV1
+	m_sound_fadeoff
 	m_fx_vblank
 	jsr wait_timint
 

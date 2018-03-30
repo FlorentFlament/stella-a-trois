@@ -7,6 +7,8 @@ part_time	ds 1
 
 ; Volume proxy (used for fade-out)
 snd_vol	ds 2
+; Volume shift value (for fade-out)
+snd_shift	ds 1
 
 ; Current part being running
 fx_part	ds 1
