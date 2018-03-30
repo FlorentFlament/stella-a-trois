@@ -5,6 +5,9 @@ time	ds 1
 ; at any moment.
 part_time	ds 1
 
+; Volume proxy (used for fade-out)
+snd_vol	ds 2
+
 ; Current part being running
 fx_part	ds 1
 ; Current layout to draw
@@ -17,8 +20,6 @@ fx_turn_state	ds 1
 fx_turn_brightness	ds 1
 ; Pointer towards the next shape to be displayed
 fx_turn_idx	ds 1
-; Pointer towards the color palette
-fx_turn_palette_ptr	ds 2
 
 ; Variables required for a single text display
 ; FX text state machine

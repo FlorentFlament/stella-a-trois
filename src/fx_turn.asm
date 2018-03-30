@@ -19,25 +19,6 @@ TURN_END equ (TURN_FADE_OUT + 8)
 	sta ptr1 + 1
 	ENDM
 
-; Update the fx_turn_palette_ptr to point to the appropriate palette
-	MAC m_fx_turn_update_palette
-	lda fx_turn_idx
-	and #$01
-	bne .palette_b
-	lda #<fx_turn_palette_a
-	sta fx_turn_palette_ptr
-	lda #>fx_turn_palette_a
-	sta fx_turn_palette_ptr + 1
-	jmp .end
-.palette_b:
-	;lda #<fx_turn_palette_b
-	lda #<fx_turn_palette_a
-	sta fx_turn_palette_ptr
-	lda #>fx_turn_palette_a
-	sta fx_turn_palette_ptr + 1
-.end:
-	ENDM
-
 ; FX Turn House Keeping Macro
 	MAC m_fx_turn_housekeep
 FX_TURN_HOUSEKEEP equ *
@@ -69,21 +50,24 @@ FX_TURN_HOUSEKEEP equ *
 	bne .end
 	inc fx_turn_state
 .end:
-	m_fx_turn_update_palette
 	echo "FX Turn Housekeep size: ", (* - FX_TURN_HOUSEKEEP)d, "bytes"
 	ENDM
 
 ; Line number must be in register X
-; Position of the dot must be in register tmp
+; Position of the dot must be in tmp
 ; Argument is the sprite to use (0 or 1)
+; The macro uses Y
 	MAC m_fx_position_dot
 	txa
+	REPEAT 3
+	lsr
+	REPEND
 	tay
-	lda (fx_turn_palette_ptr),Y
+	lda fx_turn_palette_a,Y
 	ora fx_turn_brightness
 	sta COLUP0
 	sta COLUP1
-	sleep 7
+	sleep 2
 
 	lda tmp
 	sec

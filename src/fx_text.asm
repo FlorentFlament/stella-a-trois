@@ -26,7 +26,7 @@ FX_TEXT_HOUSEKEEP equ *
 	sec
 	lda #(TEXT_END - 1)
 	sbc fx_text_state
-	ora #$20
+	ora #$d0
 	sta fx_text_color
 .inc_cpt:
 	lda frame_cnt

@@ -50,6 +50,10 @@ main_loop:
 	lda #39			; (/ (* 34.0 76) 64) = 40.375
 	sta TIM64T
 	INCLUDE "spookjaune_player.asm"
+	lda snd_vol
+	sta AUDV0
+	lda snd_vol+1
+	sta AUDV1
 	m_fx_vblank
 	jsr wait_timint
 

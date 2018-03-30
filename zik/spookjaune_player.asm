@@ -251,7 +251,7 @@ tt_FetchNote:
         beq .endOfPercussion            ; 0 means end of percussion data
         inc tt_envelope_index_c0,x      ; if end not reached: advance index
 .endOfPercussion:
-        sta AUDV0,x
+        sta snd_vol,x
         lsr
         lsr
         lsr
@@ -320,7 +320,7 @@ tt_Bit6Set:     ; This opcode has bit #6 set, for use with bit instruction
         iny                             ; advance index otherwise
 .endOfEnvelope:
         sty tt_envelope_index_c0,x
-        sta AUDV0,x
+        sta snd_vol,x
         ; Now adjust frequency with ADSR value from envelope
         lsr
         lsr
