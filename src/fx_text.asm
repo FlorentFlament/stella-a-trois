@@ -17,7 +17,7 @@ FX_TEXT_HOUSEKEEP equ *
 	sta fx_text_offset
 	; Setup text color
 	lda fx_text_state
-	ora #$20
+	ora #$d0
 	sta fx_text_color
 	jmp .inc_cpt
 .state_fadeout:
