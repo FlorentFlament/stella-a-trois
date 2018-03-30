@@ -164,8 +164,13 @@ t_beers_setup:
 	sta fx_turn_state
 	rts
 t_welove_setup:
+	SET_POINTER fx_layout_ptr, (fx_kernel_demo-1)
 	lda #(P_WELOVE - 1)
 	sta fx_text_period_mask
+	lda #0
+	sta part_time
+	sta fx_turn_idx
+	sta fx_turn_state
 	rts
 t_greetz_setup:
 	lda #(P_GREETZ - 1)
@@ -191,10 +196,12 @@ T_TITLE equ T_INTRO + (N_TITLE * P_TITLE)
 T_CREDITS equ T_TITLE + (N_CREDITS * P_CREDITS)
 T_TRANS_1 equ T_CREDITS + (N_TRANSITION * P_TRANSITION)
 T_BEERS equ T_TRANS_1 + (N_BEERS * P_BEERS)
-T_WELOVE equ T_BEERS + (N_WELOVE * P_WELOVE)
+T_TRANS_2 equ T_BEERS + (N_TRANSITION * P_TRANSITION)
+T_WELOVE equ T_TRANS_2 + (N_WELOVE * P_WELOVE)
 T_GREETZ equ T_WELOVE + (N_GREETZ * P_GREETZ)
 T_ENDING equ T_GREETZ + (N_ENDING * P_ENDING)
 T_LATEST equ T_ENDING + (N_LATEST * P_LATEST)
+T_TRANS_3 equ T_LATEST + (N_TRANSITION * P_TRANSITION)
 ; timeline in 64 frames time units
 t_timeline:
 	dc.b T_INTRO
@@ -202,10 +209,12 @@ t_timeline:
 	dc.b T_CREDITS
 	dc.b T_TRANS_1
 	dc.b T_BEERS
+	dc.b T_TRANS_2
 	dc.b T_WELOVE
 	dc.b T_GREETZ
 	dc.b T_ENDING
 	dc.b T_LATEST
+	dc.b T_TRANS_3
 	dc.b 0 ; END
 
 ; Pointers to part dependent setup functions
@@ -215,10 +224,12 @@ t_setup_l:
 	dc.b #<(t_credits_setup  - 1)
 	dc.b #<(t_transition_setup - 1)
 	dc.b #<(t_beers_setup - 1)
+	dc.b #<(t_transition_setup - 1)
 	dc.b #<(t_welove_setup - 1)
 	dc.b #<(t_greetz_setup - 1)
 	dc.b #<(t_ending_setup - 1)
 	dc.b #<(t_latest_setup - 1)
+	dc.b #<(t_transition_setup - 1)
 	dc.b #<(t_blank_setup - 1)
 
 t_setup_h
@@ -227,10 +238,12 @@ t_setup_h
 	dc.b #>(t_credits_setup  - 1)
 	dc.b #>(t_transition_setup - 1)
 	dc.b #>(t_beers_setup - 1)
+	dc.b #>(t_transition_setup - 1)
 	dc.b #>(t_welove_setup - 1)
 	dc.b #>(t_greetz_setup - 1)
 	dc.b #>(t_ending_setup - 1)
 	dc.b #>(t_latest_setup - 1)
+	dc.b #>(t_transition_setup - 1)
 	dc.b #>(t_blank_setup - 1)
 
 fx_turn_shapes_l:
