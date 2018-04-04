@@ -14,3 +14,11 @@ Requirements
 * python3
 * stella (eumlator)
 * virtualenv
+
+
+Links
+=====
+
+* [Pouet](http://www.pouet.net/prod.php?which=75758)
+* [Youtube](https://www.youtube.com/watch?v=j5GwY3ysE1Q)
+* [Demozoo](http://demozoo.org/productions/185584/)
