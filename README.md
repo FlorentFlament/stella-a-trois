@@ -6,10 +6,11 @@ Stella A Trois
 * Ranked 3rd in the Oldskool 4K Intro category
 
 
-Build requirements
-==================
+Requirements
+============
 
 * dasm
 * make
 * python3
+* stella (eumlator)
 * virtualenv
